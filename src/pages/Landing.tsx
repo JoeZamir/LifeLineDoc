@@ -1,4 +1,4 @@
-import { Heart, Shield, Phone } from "lucide-react";
+import { Shield, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Landing = () => {
@@ -7,11 +7,15 @@ const Landing = () => {
       {/* Header */}
       <header className="px-6 pt-8 pb-4">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-            <Heart className="w-5 h-5 text-primary-foreground" />
+          <div className="w-16 h-16 rounded-xl gradient-primary flex items-center justify-center">
+            <img
+              src="/assets/logo-64.png"
+              alt="LifelineDoc Logo"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div>
-            <h1 className="text-lg font-display font-bold text-foreground">LifelineDoc</h1>
+            <h1 className="text-lg font-display font-bold text-primary">Lifeline<span className="text-destructive">Doc</span></h1>
             <p className="text-xs text-muted-foreground">Kenya Emergency Medical</p>
           </div>
         </div>
