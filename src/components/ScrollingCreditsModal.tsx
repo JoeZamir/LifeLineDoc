@@ -24,6 +24,7 @@ const ScrollingCreditsModal = ({
     const containerRef = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const currentIndexRef = useRef(0);
+    const completionRef = useRef<NodeJS.Timeout | null>(null);
 
     // helper to schedule next line if not paused
     const scheduleNext = () => {
@@ -36,6 +37,24 @@ const ScrollingCreditsModal = ({
                     lines[currentIndexRef.current],
                 ]);
                 currentIndexRef.current += 1;
+
+                // if we've reached the end, start completion timer
+                if (currentIndexRef.current >= lines.length) {
+                    // clear any previous completion timer
+                    if (completionRef.current) {
+                        clearTimeout(completionRef.current);
+                        completionRef.current = null;
+                    }
+                    if (!isPaused) {
+                        completionRef.current = setTimeout(() => {
+                            onClose();
+                        }, 10000);
+                    }
+                    // no further scheduling of lines
+                    intervalRef.current = null;
+                    return;
+                }
+
                 scheduleNext();
             }, 3000);
         }
@@ -81,6 +100,10 @@ const ScrollingCreditsModal = ({
                 clearTimeout(intervalRef.current);
                 intervalRef.current = null;
             }
+            if (completionRef.current) {
+                clearTimeout(completionRef.current);
+                completionRef.current = null;
+            }
         } else {
             // resumed and there are remaining lines
             if (
@@ -90,8 +113,28 @@ const ScrollingCreditsModal = ({
             ) {
                 scheduleNext();
             }
+            // if resumed and we've already finished lines, restart completion countdown
+            if (
+                !completionRef.current &&
+                isOpen &&
+                currentIndexRef.current >= lines.length
+            ) {
+                completionRef.current = setTimeout(() => {
+                    onClose();
+                }, 5000);
+            }
         }
     }, [isPaused, isOpen, lines]);
+
+    // clear completion timer when modal closes/unmounts
+    useEffect(() => {
+        return () => {
+            if (completionRef.current) {
+                clearTimeout(completionRef.current);
+                completionRef.current = null;
+            }
+        };
+    }, []);
 
     // keep scroll at bottom so new line is visible
     useEffect(() => {
