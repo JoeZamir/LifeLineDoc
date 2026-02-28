@@ -23,45 +23,82 @@ const ScrollingCreditsModal = ({
     const [isPaused, setIsPaused] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    const currentIndexRef = useRef(0);
+
+    // helper to schedule next line if not paused
+    const scheduleNext = () => {
+        if (isPaused) return;
+        if (currentIndexRef.current < lines.length) {
+            intervalRef.current = setTimeout(() => {
+                // push next line and schedule again
+                setDisplayedLines((prev) => [
+                    ...prev,
+                    lines[currentIndexRef.current],
+                ]);
+                currentIndexRef.current += 1;
+                scheduleNext();
+            }, 3000);
+        }
+    };
 
     // Reset and start the scrolling effect
     useEffect(() => {
+        // clear any previous timer
+        if (intervalRef.current) {
+            clearTimeout(intervalRef.current);
+            intervalRef.current = null;
+        }
+
         if (!isOpen) {
             setDisplayedLines([]);
-            if (intervalRef.current) clearTimeout(intervalRef.current);
+            currentIndexRef.current = 0;
             return;
         }
 
         setDisplayedLines([]);
-        let currentIndex = 0;
+        currentIndexRef.current = 0;
 
-        const startScrolling = () => {
-            if (currentIndex < lines.length) {
-                setDisplayedLines((prev) => [...prev, lines[currentIndex]]);
-                currentIndex++;
-                intervalRef.current = setTimeout(startScrolling, 3000);
-            }
-        };
-
-        // Show first line immediately
         if (lines.length > 0) {
+            // display first line immediately
             setDisplayedLines([lines[0]]);
-            currentIndex = 1;
-            intervalRef.current = setTimeout(startScrolling, 3000);
+            currentIndexRef.current = 1;
+            scheduleNext();
         }
 
         return () => {
-            if (intervalRef.current) clearTimeout(intervalRef.current);
+            if (intervalRef.current) {
+                clearTimeout(intervalRef.current);
+                intervalRef.current = null;
+            }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, lines]);
 
-    // Handle pause on interaction
+    // Handle pause/resume
     useEffect(() => {
-        if (isPaused && intervalRef.current) {
-            clearTimeout(intervalRef.current);
+        if (isPaused) {
+            if (intervalRef.current) {
+                clearTimeout(intervalRef.current);
+                intervalRef.current = null;
+            }
+        } else {
+            // resumed and there are remaining lines
+            if (
+                !intervalRef.current &&
+                isOpen &&
+                currentIndexRef.current < lines.length
+            ) {
+                scheduleNext();
+            }
         }
-    }, [isPaused]);
+    }, [isPaused, isOpen, lines]);
+
+    // keep scroll at bottom so new line is visible
+    useEffect(() => {
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [displayedLines]);
 
     if (!isOpen) return null;
 
