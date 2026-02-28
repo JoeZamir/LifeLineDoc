@@ -56,7 +56,7 @@ const ScrollingCreditsModal = ({
                 }
 
                 scheduleNext();
-            }, 3000);
+            }, 4000);
         }
     };
 
