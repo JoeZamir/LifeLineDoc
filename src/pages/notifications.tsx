@@ -36,8 +36,8 @@ const Notifications = () => {
       </header>
 
       <div className="space-y-3">
-        {notifications.map((item) => (
-          <div key={item.id} className="medical-card flex items-start gap-3">
+        {notifications.map((item, index) => (
+          <div key={item.id} className={`medical-card flex items-start gap-3 ${index === 0 ? 'bg-primary/10' : ''}`}>
             <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center mt-0.5">
               <Bell className="w-4 h-4 text-primary" />
             </div>
