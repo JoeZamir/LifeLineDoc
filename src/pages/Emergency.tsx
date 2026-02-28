@@ -26,7 +26,7 @@ const Emergency = () => {
   const showSummary = session.summaryDispatched;
 
   return (
-    <div className="min-h-screen bg-background pb-8">
+    <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button

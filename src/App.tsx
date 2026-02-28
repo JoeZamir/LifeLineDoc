@@ -12,6 +12,7 @@ import DoctorView from "./pages/DoctorView";
 import AmbulanceView from "./pages/AmbulanceView";
 import Notifications from "./pages/notifications";
 import NotFound from "./pages/NotFound";
+import BottomNav from "./components/BottomNav";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/notifications" element={<Notifications />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <BottomNav />
         </div>
       </BrowserRouter>
     </TooltipProvider>

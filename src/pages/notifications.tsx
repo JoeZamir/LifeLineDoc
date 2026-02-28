@@ -20,7 +20,7 @@ const Notifications = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background px-5 pt-6 pb-8">
+    <div className="min-h-screen bg-background px-5 pt-6 pb-24">
       <header className="flex items-center gap-3 mb-5">
         <button
           onClick={() => navigate("/dashboard")}

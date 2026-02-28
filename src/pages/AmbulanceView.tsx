@@ -46,7 +46,7 @@ const AmbulanceView = () => {
   }, [state, amb.eta]);
 
   return (
-    <div className="min-h-screen bg-background pb-8">
+    <div className="min-h-screen bg-background pb-24">
       <header className="px-5 pt-6 pb-4 flex items-center gap-3">
         <button onClick={() => navigate("/dashboard")} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-5 h-5 text-foreground" />
