@@ -11,12 +11,12 @@ const Landing = () => {
             <img
               src="/assets/logo-64.png"
               alt="LifelineDoc Logo"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
           <div>
             <h1 className="text-lg font-display font-bold text-primary">Lifeline<span className="text-destructive">Doc</span></h1>
-            <p className="text-xs text-muted-foreground">Kenya Emergency Medical</p>
+            <p className="text-xs text-muted-foreground">When Every Second Counts</p>
           </div>
         </div>
       </header>
