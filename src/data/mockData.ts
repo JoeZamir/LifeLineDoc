@@ -11,26 +11,6 @@ export const mockDoctors: Doctor[] = [
     avatar: "",
     phone: "+254 712 345 678",
   },
-  {
-    id: "doc-002",
-    name: "Dr. James Ochieng",
-    licenseId: "KE-MED-31052",
-    hospital: "Aga Khan University Hospital",
-    specialty: "Critical Care",
-    rating: 4.8,
-    avatar: "",
-    phone: "+254 723 456 789",
-  },
-  {
-    id: "doc-003",
-    name: "Dr. Amina Hassan",
-    licenseId: "KE-MED-27836",
-    hospital: "Kenyatta National Hospital",
-    specialty: "Trauma Surgery",
-    rating: 4.7,
-    avatar: "",
-    phone: "+254 734 567 890",
-  },
 ];
 
 export const mockAmbulances: Ambulance[] = [
