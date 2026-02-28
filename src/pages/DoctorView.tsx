@@ -11,8 +11,33 @@ import {
   Stethoscope,
   Video,
   User,
+  MessageCircle,
 } from "lucide-react";
 import DoctorCard from "@/components/DoctorCard";
+import ScrollingCreditsModal from "@/components/ScrollingCreditsModal";
+
+const drMarthaLines = [
+  { id: 1, line: "Hello." },
+  { id: 2, line: "Calm down Patrick. Tell me what is happening." },
+  { id: 3, line: "Okay, stay calm. I can see where you are right now." },
+  { id: 4, line: "Okay. I need you to check if he's breathing. Tilt his head back slightly and look at his chest. Can you see it moving?" },
+  { id: 5, line: "Can one of the students check the Teachers bag if there are any drugs please?" },
+  { id: 6, line: "Alright. Now check for a pulse. Place two fingers on the side of his neck. Can you feel a heartbeat?" },
+  { id: 7, line: "How do I send the status report to the ambulance?" },
+  { id: 8, line: "Impressive. We need to start CPR immediately. Have you ever done it before?" },
+  { id: 9, line: "It's alright, I will guide you." },
+  { id: 10, line: "Put the heel of one hand in the center of his chest. Put your other hand on top and interlock your fingers." },
+  { id: 11, line: "Dyslipidemia! Now on how to Position your body: Keep your arms straight and shoulders directly above your hands. Good, you are doing very good. Now, we Start" },
+  { id: 12, line: "compressions: Push hard and fast about 2 inches deep, at a rate of 100-120 compressions per minute. Let the chest fully come back up after each push." },
+  { id: 13, line: "I'm seeing a notification for file sharing with the ambulance." },
+  { id: 14, line: "Yes." },
+  { id: 15, line: "Impressive, Keep going continuously. Don't stop. I can see the live location of the ambulance. It's on the way." },
+  { id: 16, line: "Even if you get tired, try to keep compressions going until help arrives, or he shows signs of life. They are not very far." },
+  { id: 17, line: "Good. Keep a steady rhythm. If possible, count out loud: one, two, three, It helps maintain the right speed." },
+  { id: 18, line: "Excellent. Keep pushing. Again, Don't stop until trained personnel arrive or he starts, if he starts breathing or moves." },
+  { id: 19, line: "You can stop CPR and place him on his side, It's a recovery position. Keep monitoring him. I will be right here and the ambulance is on it's way." },
+  { id: 20, line: "No, thank you. You have just saved a life. You are a very brave young man." }
+];
 
 type DoctorViewState = "WAITING" | "INCOMING" | "ACCEPTED" | "IN_CALL";
 
@@ -22,6 +47,7 @@ const DoctorView = () => {
   const patient = mockPatient;
   const [state, setState] = useState<DoctorViewState>("WAITING");
   const [timer, setTimer] = useState(0);
+  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
 
   useEffect(() => {
     // Simulate incoming alert after 2s
@@ -49,6 +75,13 @@ const DoctorView = () => {
           <h1 className="font-display font-bold text-foreground">Doctor Dashboard</h1>
           <p className="text-xs text-muted-foreground">{doctor.name}</p>
         </div>
+        <button
+          onClick={() => setIsCreditsOpen(true)}
+          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+          aria-label="View conversation transcript"
+        >
+          <MessageCircle className="w-5 h-5 text-foreground" />
+        </button>
         <span className="status-badge-active">
           <span className="w-1.5 h-1.5 rounded-full bg-medical-green animate-blink" />
           Online
@@ -162,6 +195,13 @@ const DoctorView = () => {
           </>
         )}
       </div>
+
+      <ScrollingCreditsModal
+        isOpen={isCreditsOpen}
+        onClose={() => setIsCreditsOpen(false)}
+        lines={drMarthaLines}
+        title="Dr. Martha's Guidance"
+      />
     </div>
   );
 };
