@@ -26,7 +26,11 @@ const Dashboard = () => {
             <h1 className="text-xl font-display font-bold text-foreground">{patient.name}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <button className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center relative">
+            <button
+              onClick={() => navigate("/notifications")}
+              className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center relative"
+              aria-label="Open notifications"
+            >
               <Bell className="w-5 h-5 text-foreground" />
               <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emergency border-2 border-background" />
             </button>
