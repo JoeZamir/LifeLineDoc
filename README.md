@@ -9,12 +9,14 @@ LifelineDoc is a frontend-only demo SPA that simulates a real-time medical emerg
 ## Features
 
 ### Patient View
+
 - **SOS Emergency Button** - Hold to activate emergency services
 - **Medical Profile** - Blood type, allergies, conditions, medications
 - **Emergency Contacts** - Quick-dial emergency contacts
 - **Live Location Tracking** - Simulated GPS coordinates
 
 ### Emergency Flow (State Machine)
+
 1. **INITIATED** - Sending GPS coordinates
 2. **SEARCHING_DOCTOR** - Finding nearest available doctor
 3. **DOCTOR_FOUND** - Doctor profile displayed
@@ -26,12 +28,14 @@ LifelineDoc is a frontend-only demo SPA that simulates a real-time medical emerg
 9. **SUMMARY_SYNC** - Emergency summary sent to dispatch
 
 ### Doctor View
+
 - Incoming emergency notifications
 - Patient medical information display
 - Simulated video call interface
 - Ambulance status tracking
 
 ### Ambulance Dashboard
+
 - Emergency dispatch notifications
 - Patient location and details
 - Live route progress simulation
@@ -49,6 +53,7 @@ LifelineDoc is a frontend-only demo SPA that simulates a real-time medical emerg
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
@@ -69,6 +74,7 @@ npm run preview
 ```
 
 ### Development Server
+
 The app runs on `http://localhost:3000` by default.
 
 ## Project Structure
@@ -87,6 +93,7 @@ src/
 │   ├── Landing.jsx
 │   ├── Login.jsx
 │   ├── Signup.jsx
+│   ├── RoleSelect.jsx (new pre‑signup step to pick patient/doctor/ambulance)
 │   ├── Dashboard.jsx
 │   ├── Emergency.jsx
 │   ├── Doctor.jsx
@@ -105,24 +112,31 @@ src/
 
 ## Routes
 
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page |
-| `/login` | Sign in (patient/doctor/ambulance) |
-| `/signup` | Create account |
-| `/dashboard` | Patient dashboard with SOS |
-| `/emergency` | Active emergency session |
-| `/doctor` | Doctor portal |
-| `/ambulance` | Ambulance dashboard |
+| Route          | Description                                         |
+| -------------- | --------------------------------------------------- |
+| `/`            | Landing page                                        |
+| `/login`       | Sign in (patient/doctor/ambulance)                  |
+| `/select-role` | Choose patient/doctor/ambulance (before signup)     |
+| `/signup`      | Create account (role carried from previous step)    |
+| `/doctors`     | List of registered doctors (patient/ambulance view) |
+| `/ambulances`  | List of available ambulances                        |
+| `/health`      | Health & wellness dashboard (patient only)          |
+| `/dashboard`   | Patient dashboard with SOS                          |
+| `/emergency`   | Active emergency session                            |
+| `/doctor`      | Doctor portal                                       |
+| `/ambulance`   | Ambulance dashboard                                 |
 
 ## Demo Credentials
 
-This app uses simulated authentication. Enter any email/password to log in.
+This app uses simulated authentication. Enter any phone/password to log in.
 
-**Select role on login:**
-- **Patient** - Access dashboard and SOS
-- **Doctor** - Receive emergency calls
-- **Ambulance** - Receive dispatch requests
+**Select role on login or signup:**
+
+- **Patient** - Home dashboard with personal profile; bottom nav contains doctors, ambulances and health
+- **Doctor** - Doctor dashboard (emergency alerts) with bottom nav for home and ambulances
+- **Ambulance** - Ambulance dashboard with bottom nav for home and doctors
+
+A role must be chosen before accessing the dashboard; it influences which sections are shown.
 
 ## Design Principles
 

@@ -61,7 +61,7 @@ const Landing = () => {
               Sign In
             </Link>
             <Link
-              to="/signup"
+              to="/select-role"
               className="block w-full py-4 rounded-2xl bg-secondary text-center text-secondary-foreground font-semibold text-base"
             >
               Create Account

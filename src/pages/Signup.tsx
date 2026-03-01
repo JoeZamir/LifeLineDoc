@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const { setRole } = useAuth();
+  const [role, setRoleLocal] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stateRole = (location.state as any)?.role;
+    if (stateRole) {
+      setRoleLocal(stateRole);
+    } else {
+      // nothing selected, redirect back
+      navigate("/select-role");
+    }
+  }, [location, navigate]);
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!role) {
+      setError("Role information missing");
+      return;
+    }
+    setRole(role as any);
     navigate("/dashboard");
   };
 
@@ -24,10 +44,12 @@ const Signup = () => {
 
       <div className="space-y-2 mb-8">
         <h2 className="text-2xl font-display font-bold text-foreground">Create Account</h2>
+        {role && <p className="text-sm text-muted-foreground">Signing up as <strong>{role}</strong></p>}
         <p className="text-muted-foreground">Register for emergency medical services</p>
       </div>
 
       <form onSubmit={handleSignup} className="space-y-4 flex-1">
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Full Name</label>
           <input

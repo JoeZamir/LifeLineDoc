@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 
 interface CreditLine {
@@ -27,7 +27,7 @@ const ScrollingCreditsModal = ({
     const completionRef = useRef<NodeJS.Timeout | null>(null);
 
     // helper to schedule next line if not paused
-    const scheduleNext = () => {
+    const scheduleNext = useCallback(() => {
         if (isPaused) return;
         if (currentIndexRef.current < lines.length) {
             intervalRef.current = setTimeout(() => {
@@ -58,7 +58,7 @@ const ScrollingCreditsModal = ({
                 scheduleNext();
             }, 4000);
         }
-    };
+    }, [isPaused, lines, onClose]);
 
     // Reset and start the scrolling effect
     useEffect(() => {
@@ -124,7 +124,7 @@ const ScrollingCreditsModal = ({
                 }, 5000);
             }
         }
-    }, [isPaused, isOpen, lines]);
+    }, [isPaused, isOpen, lines, scheduleNext, onClose]);
 
     // clear completion timer when modal closes/unmounts
     useEffect(() => {

@@ -3,7 +3,7 @@ import { Doctor, Ambulance, Patient, Location } from "@/types/emergency";
 export const mockDoctors: Doctor[] = [
   {
     id: "doc-001",
-    name: "Dr. Martha Wanjiku",
+    name: "Dr. Martha",
     licenseId: "KE-MED-28491",
     hospital: "Nairobi Hospital",
     specialty: "Emergency Medicine",

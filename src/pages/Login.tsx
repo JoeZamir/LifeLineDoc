@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { Heart, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [roleSelect, setRoleSelect] = useState<"patient" | "doctor" | "ambulance" | "">("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { setRole } = useAuth();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!roleSelect) {
+      setError("Please select a role before signing in.");
+      return;
+    }
+    setRole(roleSelect as "patient" | "doctor" | "ambulance");
     navigate("/dashboard");
   };
 
@@ -28,6 +37,21 @@ const Login = () => {
       </div>
 
       <form onSubmit={handleLogin} className="space-y-4 flex-1">
+        {error && <p className="text-sm text-destructive">{error}</p>}
+        <div className="space-y-2">
+          <label htmlFor="role" className="text-sm font-medium text-foreground">Role</label>
+          <select
+            id="role"
+            value={roleSelect}
+            onChange={(e) => setRoleSelect(e.target.value as "patient" | "doctor" | "ambulance" | "")}
+            className="w-full px-4 py-3.5 rounded-xl bg-secondary text-foreground border-none outline-none focus:ring-2 focus:ring-primary"
+          >
+            <option value="" disabled>Select role</option>
+            <option value="patient">Patient</option>
+            <option value="doctor">Doctor</option>
+            <option value="ambulance">Ambulance Provider</option>
+          </select>
+        </div>
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Phone Number</label>
           <input
@@ -69,7 +93,7 @@ const Login = () => {
 
       <p className="text-center text-sm text-muted-foreground py-6">
         Don't have an account?{" "}
-        <Link to="/signup" className="text-primary font-medium">Sign Up</Link>
+        <Link to="/select-role" className="text-primary font-medium">Sign Up</Link>
       </p>
     </div>
   );
