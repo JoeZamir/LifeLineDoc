@@ -24,10 +24,10 @@ const RoleSelect = () => {
             <div className="space-y-2 mb-8">
                 <h2 className="text-2xl font-display font-bold text-foreground">Welcome</h2>
             </div>
-            <h3 className="text-xl font-display font-bold text-foreground mb-6">
+            <h3 className="text-lg font-display font-semi-bold text-foreground mb-6">
                 I want to sign up as a
             </h3>
-            <div className="w-[60vw] max-w-md mx-auto p-6 flex flex-col items-center gap-4">
+            <div className="p-6 flex flex-col items-center gap-4">
                 <button
                     onClick={() => chooseRole("patient")}
                     className="medical-card w-full flex items-center justify-self-start gap-3 py-4 px-5"

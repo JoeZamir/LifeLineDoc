@@ -35,12 +35,12 @@ const Login = () => {
         <h1 className="text-lg font-display font-bold"><span className="text-primary">Lifeline</span><span className="text-destructive">Doc</span></h1>
       </div>
 
-      <div className="space-y-2 mb-8">
+      <div className="space-y-2 mb-8 px-6">
         <h2 className="text-2xl font-display font-bold text-foreground">Welcome back</h2>
         <p className="text-muted-foreground">Sign in to access emergency services</p>
       </div>
 
-      <form onSubmit={handleLogin} className="w-[60vw] max-w-md px-6 space-y-4 flex-1">
+      <form onSubmit={handleLogin} className="px-6 space-y-4 flex-1">
         {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="space-y-2">
           <label htmlFor="role" className="text-sm font-medium text-foreground">Role</label>
