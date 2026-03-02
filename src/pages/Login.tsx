@@ -25,10 +25,14 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 pt-12">
       <div className="flex items-center gap-2 mb-10">
-        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-          <Heart className="w-5 h-5 text-primary-foreground" />
+        <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center">
+        <img
+              src="/assets/logo-64.png"
+              alt="LifelineDoc Logo"
+              className="w-full h-full object-contain"
+            />
         </div>
-        <h1 className="text-lg font-display font-bold text-foreground">LifelineDoc</h1>
+        <h1 className="text-lg font-display font-bold text-foreground">Lifeline<span className="text-destructive">Doc</span></h1>
       </div>
 
       <div className="space-y-2 mb-8">

@@ -7,7 +7,7 @@ const Landing = () => {
       {/* Header */}
       <header className="px-6 pt-8 pb-4">
         <div className="flex items-center gap-2">
-          <div className="w-16 h-16 rounded-xl gradient-primary flex items-center justify-center">
+          <div className="w-16 h-16 rounded-xl bg-background flex items-center justify-center">
             <img
               src="/assets/logo-64.png"
               alt="LifelineDoc Logo"

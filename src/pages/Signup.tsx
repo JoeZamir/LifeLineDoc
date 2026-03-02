@@ -10,13 +10,13 @@ const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setRole } = useAuth();
-  const [role, setRoleLocal] = useState<string | null>(null);
+  const [roleSelect, setRoleSelect] = useState<"patient" | "doctor" | "ambulance" | "">("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const stateRole = (location.state as any)?.role;
+    const stateRole = (location.state as { role?: string })?.role;
     if (stateRole) {
-      setRoleLocal(stateRole);
+      setRoleSelect(stateRole as "patient" | "doctor" | "ambulance");
     } else {
       // nothing selected, redirect back
       navigate("/select-role");
@@ -25,11 +25,11 @@ const Signup = () => {
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!role) {
+    if (!roleSelect) {
       setError("Role information missing");
       return;
     }
-    setRole(role as any);
+    setRole(roleSelect as "patient" | "doctor" | "ambulance");
     navigate("/dashboard");
   };
 
@@ -37,14 +37,14 @@ const Signup = () => {
     <div className="min-h-screen bg-background flex flex-col px-6 pt-12">
       <div className="flex items-center gap-2 mb-10">
         <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-          <Heart className="w-5 h-5 text-primary-foreground" />
+          <Heart className="w-5 h-5 text-destructive" />
         </div>
-        <h1 className="text-lg font-display font-bold text-foreground">LifelineDoc</h1>
+        <h1 className="text-lg font-display font-bold text-foreground">Lifeline<span className="text-red-500">Doc</span></h1>
       </div>
 
       <div className="space-y-2 mb-8">
         <h2 className="text-2xl font-display font-bold text-foreground">Create Account</h2>
-        {role && <p className="text-sm text-muted-foreground">Signing up as <strong>{role}</strong></p>}
+        {roleSelect && <p className="text-sm text-muted-foreground">Signing up as <strong>{roleSelect}</strong></p>}
         <p className="text-muted-foreground">Register for emergency medical services</p>
       </div>
 
