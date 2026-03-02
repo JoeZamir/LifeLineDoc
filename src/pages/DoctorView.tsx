@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { mockDoctors, mockPatient } from "@/data/mockData";
+import { useEmergencySession } from "@/hooks/useEmergencySession";
 import {
   ArrowLeft,
   Phone,
@@ -24,6 +25,8 @@ const DoctorView = () => {
   const [state, setState] = useState<DoctorViewState>("WAITING");
   const [timer, setTimer] = useState(0);
 
+  const { setVideoConnected } = useEmergencySession();
+
 
   useEffect(() => {
     // Simulate incoming alert after 2s
@@ -37,6 +40,15 @@ const DoctorView = () => {
       return () => clearInterval(interval);
     }
   }, [state]);
+
+  // propagate video connection flag to context and reset when call ends
+  useEffect(() => {
+    if (state === "IN_CALL") {
+      setVideoConnected(true);
+    } else {
+      setVideoConnected(false);
+    }
+  }, [state, setVideoConnected]);
 
   const formatTime = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;

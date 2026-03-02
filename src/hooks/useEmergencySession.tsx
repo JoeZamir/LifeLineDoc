@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, createContext, useContext, ReactNode } from "react";
+import { useState, useCallback, useRef, createContext, useContext, ReactNode, useEffect } from "react";
 import {
   EmergencyState,
   EmergencySession,
@@ -22,6 +22,13 @@ interface EmergencyContextType {
   startEmergency: () => Promise<void>;
   cancelEmergency: () => void;
   clearSummaryNotification: () => void;
+  /** set the videoConnected flag manually */
+  setVideoConnected: (connected: boolean) => void;
+  /**
+   * force the summaryDispatched flag to true (used by doctor UI simulation)
+   * kept for backward compatibility but no longer necessary
+   */
+  markSummaryDispatched: () => void;
 }
 
 const EmergencyContext = createContext<EmergencyContextType | undefined>(undefined);
@@ -115,17 +122,6 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }): JSX.El
     setSession((prev) => ({ ...prev, videoConnected: videoResult.connected }));
     addLog(videoResult.log);
 
-    // Schedule summary dispatch notification 30 seconds after video connected
-    summaryTimeoutRef.current = setTimeout(() => {
-      addLog({
-        id: "log-summary-ready",
-        timestamp: new Date(),
-        message: "Emergency summary dispatched to ambulance providers",
-        type: "success",
-      });
-      setSession((prev) => ({ ...prev, summaryDispatched: true }));
-    }, 30000);
-
     // STATE 6: Dispatch ambulance (parallel)
     setState("DISPATCHING_AMBULANCE");
     addLog({
@@ -159,7 +155,6 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }): JSX.El
         setState("COMPLETED");
       },
     );
-
     cleanupRef.current = cleanup;
   }, [addLog, setState]);
 
@@ -181,9 +176,52 @@ export const EmergencyProvider = ({ children }: { children: ReactNode }): JSX.El
     setSession((prev) => ({ ...prev, summaryDispatched: false }));
   }, []);
 
+  const setVideoConnected = useCallback((connected: boolean) => {
+    setSession((prev) => ({ ...prev, videoConnected: connected }));
+  }, []);
+
+  // automatically set summaryDispatched 30 seconds after videoConnected becomes true
+  useEffect(() => {
+    if (session.videoConnected) {
+      summaryTimeoutRef.current = setTimeout(() => {
+        addLog({
+          id: "log-summary-ready",
+          timestamp: new Date(),
+          message: "Emergency summary dispatched to ambulance providers",
+          type: "success",
+        });
+        setSession((prev) => ({ ...prev, summaryDispatched: true }));
+      }, 30000);
+    } else {
+      if (summaryTimeoutRef.current) {
+        clearTimeout(summaryTimeoutRef.current);
+        summaryTimeoutRef.current = null;
+      }
+      // optionally clear flag when connection drops
+      setSession((prev) => ({ ...prev, summaryDispatched: false }));
+    }
+
+    return () => {
+      if (summaryTimeoutRef.current) {
+        clearTimeout(summaryTimeoutRef.current);
+      }
+    };
+  }, [session.videoConnected, addLog]);
+
+  const markSummaryDispatched = useCallback(() => {
+    setSession((prev) => ({ ...prev, summaryDispatched: true }));
+  }, []);
+
   return (
     <EmergencyContext.Provider
-      value={{ session, startEmergency, cancelEmergency, clearSummaryNotification }}
+      value={{
+        session,
+        startEmergency,
+        cancelEmergency,
+        clearSummaryNotification,
+        setVideoConnected,
+        markSummaryDispatched,
+      }}
     >
       {children}
     </EmergencyContext.Provider>

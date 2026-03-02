@@ -1,28 +1,48 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import { Heart, Stethoscope, Truck, Activity, FileCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useEmergencySession } from "@/hooks/useEmergencySession.tsx";
+import SummaryModal from "@/components/SummaryModal";
 
 const BottomNav = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { role } = useAuth();
     const { session, clearSummaryNotification } = useEmergencySession();
+    const [showSummaryModal, setShowSummaryModal] = useState(false);
+    const ambulancesRef = useRef<HTMLDivElement | null>(null);
+    const [iconPos, setIconPos] = useState<{ left: number; bottom: number }>({ left: 0, bottom: 0 });
+    const [showDispatchIcon, setShowDispatchIcon] = useState(false);
 
-    // hide navigation on non-auth pages
+    // manage timer for dispatch icon based on video connection state
+    useEffect(() => {
+        let tid: NodeJS.Timeout | null = null;
+        if (session.videoConnected) {
+            // start 30s delay to show indicator
+            tid = setTimeout(() => {
+                setShowDispatchIcon(true);
+            }, 30000);
+        } else {
+            setShowDispatchIcon(false);
+        }
+        return () => {
+            if (tid) clearTimeout(tid);
+        };
+    }, [session.videoConnected]);
+
+    // hide navigation on non-auth pages (do not return early until after hooks are declared)
     const hidePaths = ["/", "/login", "/signup", "/select-role"]; // extend if needed
-    if (hidePaths.includes(location.pathname)) return null;
+    const hideNav = hidePaths.includes(location.pathname);
 
     const isActive = (path: string) => location.pathname === path;
 
     // helper for ambulances button with summary badge
     const renderAmbulancesBtn = () => {
-        const hasSummaryNotice = session.summaryDispatched;
         return (
-            <div key="ambulances" className="relative">
+            <div key="ambulances" className="relative" ref={ambulancesRef}>
                 <button
                     onClick={() => {
-                        if (hasSummaryNotice) clearSummaryNotification();
                         navigate("/ambulances");
                     }}
                     className={`flex flex-col items-center gap-1 ${isActive("/ambulances") ? "text-primary" : "text-muted-foreground"}`}
@@ -30,14 +50,20 @@ const BottomNav = () => {
                     <Truck className="w-5 h-5" />
                     <span className="text-[10px] font-medium">Ambulances</span>
                 </button>
-                {hasSummaryNotice && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center">
-                        <FileCheck className="w-3 h-3 text-foreground" />
-                    </div>
-                )}
             </div>
         );
     };
+
+    // compute overlay icon position when nav is rendered or summary state changes
+    useEffect(() => {
+        if (!ambulancesRef.current) return;
+        const rect = ambulancesRef.current.getBoundingClientRect();
+        const size = 40; // 10 based on w-10 h-10
+        setIconPos({
+            left: rect.left + rect.width / 2 - size / 2,
+            bottom: window.innerHeight - rect.top + 8, // a little above nav
+        });
+    }, [showDispatchIcon, location.pathname]);
 
     // depending on role, show different buttons
     let buttons: JSX.Element[] = [];
@@ -102,10 +128,34 @@ const BottomNav = () => {
         ];
     }
 
+    if (hideNav) return null;
+
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-6 py-3 flex justify-around items-center max-w-lg mx-auto">
-            {buttons}
-        </nav>
+        <>
+            <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border px-6 py-3 flex justify-around items-center max-w-lg mx-auto">
+                {buttons}
+            </nav>
+
+            {showDispatchIcon && (
+                <button
+                    onClick={() => setShowSummaryModal(true)}
+                    style={{ left: iconPos.left, bottom: iconPos.bottom }}
+                    className="fixed w-10 h-10 bg-success rounded-full flex items-center justify-center z-50 shadow-lg"
+                >
+                    <FileCheck className="w-5 h-5 text-foreground" />
+                </button>
+            )}
+
+            {showSummaryModal && (
+                <SummaryModal
+                    onClose={() => {
+                        setShowSummaryModal(false);
+                        clearSummaryNotification();
+                        setShowDispatchIcon(false);
+                    }}
+                />
+            )}
+        </>
     );
 };
 
