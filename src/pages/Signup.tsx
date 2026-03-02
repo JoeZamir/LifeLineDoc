@@ -36,10 +36,14 @@ const Signup = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 pt-12">
       <div className="flex items-center gap-2 mb-10">
-        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-          <Heart className="w-5 h-5 text-destructive" />
+        <div className="w-16 h-16 rounded-xl bg-background flex items-center justify-center">
+        <img
+            src="/assets/logo-64.png"
+            alt="LifelineDoc Logo"
+            className="w-full h-full object-contain"
+          />
         </div>
-        <h1 className="text-lg font-display font-bold text-foreground">Lifeline<span className="text-red-500">Doc</span></h1>
+        <h1 className="text-lg font-display text-primary font-bold">Lifeline<span className="text-red-500">Doc</span></h1>
       </div>
 
       <div className="space-y-2 mb-8">
@@ -48,7 +52,7 @@ const Signup = () => {
         <p className="text-muted-foreground">Register for emergency medical services</p>
       </div>
 
-      <form onSubmit={handleSignup} className="space-y-4 flex-1">
+      <form onSubmit={handleSignup} className="w-[60vw] max-w-md px-6 space-y-4 flex-1 justify-center">
         {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Full Name</label>
@@ -85,7 +89,7 @@ const Signup = () => {
 
         <button
           type="submit"
-          className="w-full py-4 rounded-2xl gradient-primary text-primary-foreground font-semibold text-base shadow-lg mt-4"
+          className="w-full px-6 py-4 rounded-2xl gradient-primary text-primary-foreground font-semibold text-base shadow-lg mt-4 transition"
         >
           Create Account
         </button>

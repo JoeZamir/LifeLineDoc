@@ -11,14 +11,14 @@ const RoleSelect = () => {
     return (
         <div className="min-h-screen bg-background flex flex-col px-6 pt-12">
             <div className="flex items-center gap-2 mb-10">
-                <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center">
+                <div className="w-16 h-16 rounded-xl bg-background flex items-center justify-center">
                     <img
                         src="/assets/logo-64.png"
                         alt="LifelineDoc Logo"
                         className="w-full h-full object-contain"
                     />
                 </div>
-                <h1 className="text-lg font-display font-bold text-foreground">Lifeline<span className="text-destructive">Doc</span></h1>
+                <h1 className="text-lg font-display font-bold text-primary">Lifeline<span className="text-destructive">Doc</span></h1>
             </div>
 
             <div className="space-y-2 mb-8">
@@ -27,7 +27,7 @@ const RoleSelect = () => {
             <h3 className="text-xl font-display font-bold text-foreground mb-6">
                 I want to sign up as a
             </h3>
-            <div className="w-[60vw] max-w-md mx-auto flex flex-col items-center gap-4">
+            <div className="w-[60vw] max-w-md mx-auto p-6 flex flex-col items-center gap-4">
                 <button
                     onClick={() => chooseRole("patient")}
                     className="medical-card w-full flex items-center justify-self-start gap-3 py-4 px-5"

@@ -25,14 +25,14 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col px-6 pt-12">
       <div className="flex items-center gap-2 mb-10">
-        <div className="w-10 h-10 rounded-xl bg-background flex items-center justify-center">
-        <img
-              src="/assets/logo-64.png"
-              alt="LifelineDoc Logo"
-              className="w-full h-full object-contain"
-            />
+        <div className="w-16 h-16 rounded-xl bg-background flex items-center justify-center">
+          <img
+            src="/assets/logo-64.png"
+            alt="LifelineDoc Logo"
+            className="w-full h-full object-contain"
+          />
         </div>
-        <h1 className="text-lg font-display font-bold text-foreground">Lifeline<span className="text-destructive">Doc</span></h1>
+        <h1 className="text-lg font-display font-bold"><span className="text-primary">Lifeline</span><span className="text-destructive">Doc</span></h1>
       </div>
 
       <div className="space-y-2 mb-8">
@@ -40,7 +40,7 @@ const Login = () => {
         <p className="text-muted-foreground">Sign in to access emergency services</p>
       </div>
 
-      <form onSubmit={handleLogin} className="space-y-4 flex-1">
+      <form onSubmit={handleLogin} className="w-[60vw] max-w-md px-6 space-y-4 flex-1">
         {error && <p className="text-sm text-destructive">{error}</p>}
         <div className="space-y-2">
           <label htmlFor="role" className="text-sm font-medium text-foreground">Role</label>
