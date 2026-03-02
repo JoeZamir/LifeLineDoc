@@ -5,7 +5,7 @@ export const mockDoctors: Doctor[] = [
     id: "doc-001",
     name: "Dr. Martha",
     licenseId: "KE-MED-28491",
-    hospital: "Nairobi Hospital",
+    hospital: "Nakuru Provincial Hospital",
     specialty: "Emergency Medicine",
     rating: 4.9,
     avatar: "",
@@ -23,24 +23,6 @@ export const mockAmbulances: Ambulance[] = [
     eta: 12,
     location: { lat: -0.3031, lng: 36.0800, label: "Nakuru CBD", county: "Nakuru" },
   },
-  {
-    id: "amb-002",
-    unitName: "Lanet Rapid 07",
-    driverName: "Samuel Mwangi",
-    vehicleReg: "KCZ 882B",
-    provider: "Nairobi EMS Unit",
-    eta: 8,
-    location: { lat: -1.2864, lng: 36.8172, label: "Westlands", county: "Nairobi" },
-  },
-  {
-    id: "amb-003",
-    unitName: "Nakuru Rapid 02",
-    driverName: "Grace Akinyi",
-    vehicleReg: "KDF 115C",
-    provider: "Nakuru Rapid Response",
-    eta: 15,
-    location: { lat: -0.2900, lng: 36.0650, label: "Milimani", county: "Nakuru" },
-  },
 ];
 
 export const mockPatient: Patient = {
@@ -50,7 +32,7 @@ export const mockPatient: Patient = {
   bloodType: "O+",
   allergies: ["Penicillin"],
   emergencyContacts: [
-    { name: "Millicent Atieno", phone: "+254 711 234 567", relation: "Mother" }
+    { name: "Mama Pascal", phone: "+254 711 234 567", relation: "Mother" }
   ],
   county: "Nakuru",
   location: {

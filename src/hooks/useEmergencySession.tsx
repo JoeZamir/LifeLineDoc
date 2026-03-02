@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, createContext, useContext, ReactNode } from "react";
 import {
   EmergencyState,
   EmergencySession,
@@ -17,7 +17,16 @@ import {
 
 const generateId = () => `EM-${Date.now().toString(36).toUpperCase()}`;
 
-export function useEmergencySession() {
+interface EmergencyContextType {
+  session: EmergencySession;
+  startEmergency: () => Promise<void>;
+  cancelEmergency: () => void;
+  clearSummaryNotification: () => void;
+}
+
+const EmergencyContext = createContext<EmergencyContextType | undefined>(undefined);
+
+export const EmergencyProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const [session, setSession] = useState<EmergencySession>({
     id: "",
     patientName: mockPatient.name,
@@ -33,6 +42,7 @@ export function useEmergencySession() {
   });
 
   const cleanupRef = useRef<(() => void) | null>(null);
+  const summaryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const addLog = useCallback((log: StatusLogEntry) => {
     setSession((prev) => ({
@@ -105,6 +115,17 @@ export function useEmergencySession() {
     setSession((prev) => ({ ...prev, videoConnected: videoResult.connected }));
     addLog(videoResult.log);
 
+    // Schedule summary dispatch notification 30 seconds after video connected
+    summaryTimeoutRef.current = setTimeout(() => {
+      addLog({
+        id: "log-summary-ready",
+        timestamp: new Date(),
+        message: "Emergency summary dispatched to ambulance providers",
+        type: "success",
+      });
+      setSession((prev) => ({ ...prev, summaryDispatched: true }));
+    }, 30000);
+
     // STATE 6: Dispatch ambulance (parallel)
     setState("DISPATCHING_AMBULANCE");
     addLog({
@@ -136,7 +157,7 @@ export function useEmergencySession() {
         addLog(summaryResult.log);
         setSession((prev) => ({ ...prev, summaryDispatched: true }));
         setState("COMPLETED");
-      }
+      },
     );
 
     cleanupRef.current = cleanup;
@@ -144,6 +165,7 @@ export function useEmergencySession() {
 
   const cancelEmergency = useCallback(() => {
     if (cleanupRef.current) cleanupRef.current();
+    if (summaryTimeoutRef.current) clearTimeout(summaryTimeoutRef.current);
     setSession((prev) => ({
       ...prev,
       status: "IDLE",
@@ -155,5 +177,23 @@ export function useEmergencySession() {
     }));
   }, []);
 
-  return { session, startEmergency, cancelEmergency };
-}
+  const clearSummaryNotification = useCallback(() => {
+    setSession((prev) => ({ ...prev, summaryDispatched: false }));
+  }, []);
+
+  return (
+    <EmergencyContext.Provider
+      value={{ session, startEmergency, cancelEmergency, clearSummaryNotification }}
+    >
+      {children}
+    </EmergencyContext.Provider>
+  );
+};
+
+export const useEmergencySession = () => {
+  const ctx = useContext(EmergencyContext);
+  if (!ctx) {
+    throw new Error("useEmergencySession must be used within EmergencyProvider");
+  }
+  return ctx;
+};

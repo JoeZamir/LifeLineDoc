@@ -1,17 +1,43 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Heart, Stethoscope, Truck, Activity } from "lucide-react";
+import { Heart, Stethoscope, Truck, Activity, FileCheck } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useEmergencySession } from "@/hooks/useEmergencySession.tsx";
 
 const BottomNav = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { role } = useAuth();
+    const { session, clearSummaryNotification } = useEmergencySession();
 
     // hide navigation on non-auth pages
     const hidePaths = ["/", "/login", "/signup", "/select-role"]; // extend if needed
     if (hidePaths.includes(location.pathname)) return null;
 
     const isActive = (path: string) => location.pathname === path;
+
+    // helper for ambulances button with summary badge
+    const renderAmbulancesBtn = () => {
+        const hasSummaryNotice = session.summaryDispatched;
+        return (
+            <div key="ambulances" className="relative">
+                <button
+                    onClick={() => {
+                        if (hasSummaryNotice) clearSummaryNotification();
+                        navigate("/ambulances");
+                    }}
+                    className={`flex flex-col items-center gap-1 ${isActive("/ambulances") ? "text-primary" : "text-muted-foreground"}`}
+                >
+                    <Truck className="w-5 h-5" />
+                    <span className="text-[10px] font-medium">Ambulances</span>
+                </button>
+                {hasSummaryNotice && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center">
+                        <FileCheck className="w-3 h-3 text-foreground" />
+                    </div>
+                )}
+            </div>
+        );
+    };
 
     // depending on role, show different buttons
     let buttons: JSX.Element[] = [];
@@ -33,14 +59,7 @@ const BottomNav = () => {
                 <Stethoscope className="w-5 h-5" />
                 <span className="text-[10px] font-medium">Doctors</span>
             </button>,
-            <button
-                key="ambulances"
-                onClick={() => navigate("/ambulances")}
-                className={`flex flex-col items-center gap-1 ${isActive("/ambulances") ? "text-primary" : "text-muted-foreground"}`}
-            >
-                <Truck className="w-5 h-5" />
-                <span className="text-[10px] font-medium">Ambulances</span>
-            </button>,
+            renderAmbulancesBtn(),
             <button
                 key="health"
                 onClick={() => navigate("/health")}
@@ -60,14 +79,7 @@ const BottomNav = () => {
                 <Heart className="w-5 h-5" />
                 <span className="text-[10px] font-medium">Home</span>
             </button>,
-            <button
-                key="ambulances"
-                onClick={() => navigate("/ambulances")}
-                className={`flex flex-col items-center gap-1 ${isActive("/ambulances") ? "text-primary" : "text-muted-foreground"}`}
-            >
-                <Truck className="w-5 h-5" />
-                <span className="text-[10px] font-medium">Ambulances</span>
-            </button>,
+            renderAmbulancesBtn(),
         ];
     } else if (role === "ambulance") {
         buttons = [
