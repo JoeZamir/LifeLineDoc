@@ -12,9 +12,8 @@ import {
   Stethoscope,
   Video,
   User,
-  MessageCircle,
+  Power,
 } from "lucide-react";
-import DoctorCard from "@/components/DoctorCard";
 
 type DoctorViewState = "WAITING" | "INCOMING" | "ACCEPTED" | "IN_CALL";
 
@@ -24,15 +23,21 @@ const DoctorView = () => {
   const patient = mockPatient;
   const [state, setState] = useState<DoctorViewState>("WAITING");
   const [timer, setTimer] = useState(0);
+  const [onCall, setOnCall] = useState(true);
 
   const { setVideoConnected } = useEmergencySession();
 
 
   useEffect(() => {
-    // Simulate incoming alert after 2s
-    const t1 = setTimeout(() => setState("INCOMING"), 2000);
-    return () => clearTimeout(t1);
-  }, []);
+    // Simulate incoming alert when on call
+    let t1: NodeJS.Timeout | null = null;
+    if (onCall && state === "WAITING") {
+      t1 = setTimeout(() => setState("INCOMING"), 2000);
+    }
+    return () => {
+      if (t1) clearTimeout(t1);
+    };
+  }, [onCall, state]);
 
   useEffect(() => {
     if (state === "IN_CALL") {
@@ -55,7 +60,7 @@ const DoctorView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      <header className="px-5 pt-6 pb-4 flex items-center gap-3">
+      <header className="px-5 pt-6 pb-4 flex items-center justify-between">
         <button onClick={() => navigate("/dashboard")} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
@@ -63,21 +68,34 @@ const DoctorView = () => {
           <h1 className="font-display font-bold text-foreground">Doctor Dashboard</h1>
           <p className="text-xs text-muted-foreground">{doctor.name}</p>
         </div>
-        <button
-          onClick={() => navigate('/doctor/transcript')}
-          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
-          aria-label="View conversation transcript"
-        >
-          <MessageCircle className="w-5 h-5 text-foreground" />
-        </button>
-        <span className="status-badge-active">
-          <span className="w-1.5 h-1.5 rounded-full bg-medical-green animate-blink" />
-          Online
-        </span>
+        <div className="flex items-center gap-3 flex-none">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-foreground">On Call</span>
+            <button
+              onClick={() => {
+                setOnCall((v) => {
+                  if (v) {
+                    // turning off resets any pending or active session
+                    setState("WAITING");
+                    setVideoConnected(false);
+                  }
+                  return !v;
+                });
+              }}
+              className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+              aria-label="Toggle on call status"
+            >
+              <Power className={`w-5 h-5 ${onCall ? "text-success" : "text-destructive"}`} />
+            </button>
+          </div>
+          <span className={onCall ? "status-badge-active" : "status-badge bg-destructive/10 text-destructive"}>
+            <span className={`w-1.5 h-1.5 rounded-full ${onCall ? "bg-medical-green" : "bg-destructive"} animate-blink`} />
+            {onCall ? "Online" : "Offline"}
+          </span>
+        </div>
       </header>
 
       <div className="px-5 space-y-4">
-        <DoctorCard doctor={doctor} />
 
         {state === "WAITING" && (
           <div className="medical-card flex flex-col items-center py-8 space-y-3">
