@@ -4,11 +4,12 @@ import { useNavigate } from "react-router-dom";
 interface ProfileProps {
   isOpen: boolean;
   onClose: () => void;
-  onLogout: () => void;
   name: string;
 }
 
-const Profile = ({ isOpen, onClose, onLogout, name }: ProfileProps) => {
+const Profile = ({ isOpen, onClose, name }: ProfileProps) => {
+  const navigate = useNavigate();
+
   if (!isOpen) return null;
 
   return (

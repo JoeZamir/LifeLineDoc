@@ -135,7 +135,6 @@ const Dashboard = () => {
         <Profile
           isOpen={showProfile}
           onClose={() => setShowProfile(false)}
-          onLogout={() => navigate("/landing")}
           name={patient.name}
         />
       </div>
@@ -327,7 +326,6 @@ const Dashboard = () => {
         <Profile
           isOpen={showProfile}
           onClose={() => setShowProfile(false)}
-          onLogout={() => navigate("/landing")}
           name={doctor.name}
         />
       </div>
