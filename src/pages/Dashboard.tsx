@@ -16,21 +16,15 @@ import {
   Clock,
   Navigation,
   Cake,
-  Power,
-  Building2,
-  ShieldCheck,
-  Star,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useEmergencySession } from "@/hooks/useEmergencySession";
 import Profile from "@/components/profile";
 
-// Dashboard homes for each role
+// we will reuse some of the DoctorView/AmbulanceView logic later
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { role } = useAuth();
-  const { setVideoConnected } = useEmergencySession();
 
   // guard
   if (!role) {
@@ -159,22 +153,12 @@ const Dashboard = () => {
     const doctor = mockDoctors[0];
     const location = "Nairobi";
     const [state, setState] = useState<"WAITING" | "INCOMING" | "ACCEPTED">("WAITING");
-    const [onCall, setOnCall] = useState(true);
     const [showProfile, setShowProfile] = useState(false);
 
     useEffect(() => {
-      let t1: NodeJS.Timeout | null = null;
-      if (onCall && state === "WAITING") {
-        t1 = setTimeout(() => setState("INCOMING"), 3000);
-      }
-      return () => {
-        if (t1) clearTimeout(t1);
-      };
-    }, [onCall, state]);
-
-    useEffect(() => {
-      setVideoConnected(false);
-    }, [state, setVideoConnected]);
+      const t1 = setTimeout(() => setState("INCOMING"), 2000);
+      return () => clearTimeout(t1);
+    }, []);
 
 
     return (
@@ -210,73 +194,30 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* doctor home content */}
+        {/* doctor content reused from DoctorView */}
         <div className="px-5 space-y-4">
           {/* doctor card */}
-          <div className="medical-card space-y-4 p-5">
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-2xl">
-                {doctor.name.replace("Dr. ", "").charAt(0)}
-              </div>
-
-              <div className="flex-1 min-w-0 space-y-1">
-                <h3 className="font-semibold text-foreground text-[28px] leading-[1.15]">{doctor.name}</h3>
-                <p className="text-sm text-muted-foreground flex items-center gap-1.5 min-w-0">
-                  <Building2 className="w-4 h-4 shrink-0" />
-                  <span className="truncate">{doctor.hospital}</span>
-                </p>
-                <p className="text-sm text-muted-foreground flex items-center gap-3">
-                  <span className="inline-flex items-center gap-1.5"><ShieldCheck className="w-4 h-4 text-success" />{doctor.licenseId}</span>
-                  <span className="inline-flex items-center gap-1"><Star className="w-4 h-4 text-warning fill-warning" />{doctor.rating.toFixed(1)}</span>
-                </p>
-              </div>
-
-              <div className="flex flex-col items-end gap-2.5 shrink-0 pt-0.5">
-                <span className={onCall ? "status-badge-active text-success" : "status-badge bg-destructive/10 text-destructive"}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${onCall ? "bg-medical-green" : "bg-destructive"} animate-blink`} />
-                  {onCall ? "Online" : "Offline"}
-                </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-foreground">{onCall ? "On Call" : "Off Call"}</span>
-                  <button
-                    onClick={() => {
-                      setOnCall((currentValue) => {
-                        if (currentValue) {
-                          setState("WAITING");
-                          setVideoConnected(false);
-                        }
-                        return !currentValue;
-                      });
-                    }}
-                    className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
-                    aria-label="Toggle on call status"
-                  >
-                    <Power className={`w-5 h-5 ${onCall ? "text-success" : "text-destructive"}`} />
-                  </button>
-                </div>
-              </div>
+          <div className="medical-card flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center">
+              <User className="w-6 h-6 text-muted-foreground" />
             </div>
-
-            <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 px-3 py-1 text-sm font-medium text-success">
-                <span className="w-2 h-2 rounded-full bg-success" />
-                Verified
-              </span>
-              <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                {doctor.specialty}
-              </span>
+            <div>
+              <h3 className="font-semibold text-foreground">{doctor.name}</h3>
+              <p className="text-xs text-muted-foreground">{doctor.specialty} • {doctor.hospital}</p>
             </div>
+            <span className="status-badge-active">
+              <span className="w-1.5 h-1.5 rounded-full bg-medical-green animate-blink" />
+              Online
+            </span>
           </div>
 
           {state === "WAITING" && (
             <div className="medical-card flex flex-col items-center py-8 space-y-3">
               <Stethoscope className="w-10 h-10 text-muted-foreground" />
-              <p className="text-muted-foreground text-sm">
-                {onCall ? "Waiting for emergency alerts…" : "You are currently off call."}
-              </p>
+              <p className="text-muted-foreground text-sm">Waiting for emergency alerts…</p>
               <div className="flex items-center gap-1.5">
-                <span className={`w-2 h-2 rounded-full ${onCall ? "bg-success animate-blink" : "bg-destructive"}`} />
-                <span className="text-xs text-muted-foreground">{onCall ? "Available" : "Unavailable"}</span>
+                <span className="w-2 h-2 rounded-full bg-success animate-blink" />
+                <span className="text-xs text-muted-foreground">Available</span>
               </div>
             </div>
           )}
