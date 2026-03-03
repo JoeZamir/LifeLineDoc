@@ -7,7 +7,6 @@ import {
   Bell,
   User,
   Phone,
-  Heart,
   Droplets,
   AlertTriangle,
   Stethoscope,
