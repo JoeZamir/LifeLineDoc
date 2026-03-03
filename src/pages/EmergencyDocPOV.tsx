@@ -9,12 +9,15 @@ import { useEmergencySession } from "@/hooks/useEmergencySession";
 import { StatusLogEntry } from "@/types/emergency";
 
 const statusReports = [
-  "Teacher collapsed and responsive",
+  "transcribing call",
+  "ambulance on standby",
+  "Teacher, collapsed, uresponsive",
   "No pulse",
+  "ambulance dispatched",
   "Dyslipidemia",
   "CPR initiated",
   "Emergency risk level: critical",
-  "Ambulance notified",
+  "Summary sent",
 ];
 
 const EmergencyDocPOV = () => {
@@ -86,7 +89,7 @@ const EmergencyDocPOV = () => {
 
     const ambulanceTimeout = setTimeout(() => {
       setShowAmbulanceCard(true);
-    }, 10000);
+    }, 20000);
 
     return () => {
       clearInterval(interval);
@@ -98,7 +101,7 @@ const EmergencyDocPOV = () => {
     <div className="h-[calc(100vh-4rem)] bg-background flex flex-col overflow-hidden">
       <header className="px-5 pt-4 pb-3 border-b border-border flex items-center gap-3">
         <button
-          onClick={() => navigate("/doctor")}
+          onClick={() => navigate("/dashboard")}
           className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
         >
           <ArrowLeft className="w-5 h-5 text-foreground" />
@@ -145,12 +148,10 @@ const EmergencyDocPOV = () => {
           <div className="medical-card h-full py-2.5">
             <h3 className="text-sm font-semibold text-foreground mb-2">Patient Details</h3>
             <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
-              <p className="text-xs text-muted-foreground truncate">Phone: <span className="text-foreground">{patient.phone}</span></p>
               <p className="text-xs text-muted-foreground truncate flex items-center gap-1"><Cake className="w-3 h-3" />Age: <span className="text-foreground">{patient.age} years</span></p>
               <p className="text-xs text-muted-foreground truncate">Blood Type: <span className="text-foreground">{patient.bloodType}</span></p>
-              <p className="text-xs text-muted-foreground truncate col-span-2">Allergies: <span className="text-foreground">{patient.allergies.join(", ")}</span></p>
+              <p className="text-xs text-muted-foreground truncate">Allergies: <span className="text-foreground">{patient.allergies.join(", ")}</span></p>
               <p className="text-xs text-muted-foreground truncate">County: <span className="text-foreground">{patient.county}</span></p>
-              <p className="text-xs text-muted-foreground truncate">Contact: <span className="text-foreground">{patient.emergencyContacts[0]?.phone ?? "N/A"}</span></p>
             </div>
           </div>
         </div>

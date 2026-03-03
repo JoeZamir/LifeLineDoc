@@ -20,7 +20,7 @@ export const mockAmbulances: Ambulance[] = [
     driverName: "Peter Kamau",
     vehicleReg: "KDG 421A",
     provider: "St. John Ambulance Kenya",
-    eta: 12,
+    eta: 10,
     location: { lat: -0.3031, lng: 36.0800, label: "Nakuru CBD", county: "Nakuru" },
   },
 ];

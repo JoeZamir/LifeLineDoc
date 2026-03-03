@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { mockPatient, mockDoctors, mockAmbulances } from "@/data/mockData";
+import { useEmergencySession } from "@/hooks/useEmergencySession";
 import {
   MapPin,
   Bell,
@@ -16,6 +17,10 @@ import {
   Clock,
   Navigation,
   Cake,
+  Power,
+  Star,
+  ShieldCheck,
+  Building2
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Profile from "@/components/profile";
@@ -150,15 +155,29 @@ const Dashboard = () => {
 
   // doctor home: header styled like patient but with doctor info
   const DoctorHome = () => {
+    const navigate = useNavigate();
     const doctor = mockDoctors[0];
-    const location = "Nairobi";
+    const location = "Milimani Estate, Nakuru";
     const [state, setState] = useState<"WAITING" | "INCOMING" | "ACCEPTED">("WAITING");
     const [showProfile, setShowProfile] = useState(false);
+    const [onCall, setOnCall] = useState(true);
+
+    const { setVideoConnected } = useEmergencySession();
 
     useEffect(() => {
-      const t1 = setTimeout(() => setState("INCOMING"), 2000);
-      return () => clearTimeout(t1);
-    }, []);
+      // Simulate incoming alert when on call
+      let t1: NodeJS.Timeout | null = null;
+      if (onCall && state === "WAITING") {
+        t1 = setTimeout(() => setState("INCOMING"), 3000);
+      }
+      return () => {
+        if (t1) clearTimeout(t1);
+      };
+    }, [onCall, state]);
+    // reset shared video connection state while in dashboard flow
+    useEffect(() => {
+      setVideoConnected(false);
+    }, [state, setVideoConnected]);
 
 
     return (
@@ -171,6 +190,25 @@ const Dashboard = () => {
               <h1 className="text-xl font-display font-bold text-foreground">{`Dr. ${doctor.name.split(" ")[1]}`}</h1>
             </div>
             <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-foreground">On Call</span>
+                <button
+                  onClick={() => {
+                    setOnCall((v) => {
+                      if (v) {
+                        // turning off resets any pending or active session
+                        setState("WAITING");
+                        setVideoConnected(false);
+                      }
+                      return !v;
+                    });
+                  }}
+                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+                  aria-label="Toggle on call status"
+                >
+                  <Power className={`w-5 h-5 ${onCall ? "text-success" : "text-destructive"}`} />
+                </button>
+              </div>
               <button
                 onClick={() => navigate("/notifications")}
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center relative"
@@ -197,27 +235,76 @@ const Dashboard = () => {
         {/* doctor content reused from DoctorView */}
         <div className="px-5 space-y-4">
           {/* doctor card */}
-          <div className="medical-card flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center">
-              <User className="w-6 h-6 text-muted-foreground" />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">{doctor.name}</h3>
-              <p className="text-xs text-muted-foreground">{doctor.specialty} • {doctor.hospital}</p>
-            </div>
-            <span className="status-badge-active">
-              <span className="w-1.5 h-1.5 rounded-full bg-medical-green animate-blink" />
-              Online
-            </span>
-          </div>
+          <div className="medical-card flex flex-col gap-4 p-4 bg-card border border-border rounded-xl shadow-sm min-h-[140px] justify-between">
+  {/* Top section: Avatar + Details */}
+  <div className="flex items-start gap-3">
+    {/* Avatar */}
+    <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-primary-foreground font-bold text-lg shrink-0">
+      {doctor.name.split(" ").slice(1).map(n => n[0]).join("")}
+    </div>
+
+    {/* Name, Hospital, License + Rating */}
+    <div className="flex-1 min-w-0">
+      <h3 className="font-semibold text-foreground text-base truncate">
+        {doctor.name}
+      </h3>
+      <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+        <Building2 className="w-3.5 h-3.5" />
+        <span className="truncate">{doctor.hospital}</span>
+      </div>
+
+      {/* License + Rating in one row */}
+      <div className="flex items-center gap-4 mt-2">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <ShieldCheck className="w-3.5 h-3.5 text-success" />
+          <span>{doctor.licenseId}</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Star className="w-3.5 h-3.5 text-warning fill-warning" />
+          <span className="text-xs font-medium text-foreground">{doctor.rating}</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Online/Offline status badge – top-right */}
+    <span
+      className={`status-badge text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0 ${
+        onCall
+          ? "bg-medical-green/10 text-medical-green"
+          : "bg-destructive/10 text-destructive"
+      }`}
+    >
+      <span
+        className={`w-2 h-2 rounded-full animate-pulse ${
+          onCall ? "bg-medical-green" : "bg-destructive"
+        }`}
+      />
+      {onCall ? "Online" : "Offline"}
+    </span>
+  </div>
+
+  {/* Bottom section: Verified + Specialty */}
+  <div className="flex items-center gap-2 mt-auto">
+    <span className="status-badge-active flex items-center gap-1.5 px-3 py-1 text-xs font-medium">
+      <span className="w-2 h-2 rounded-full bg-medical-green animate-pulse" />
+      Verified
+    </span>
+    <span className="status-badge bg-primary/10 text-primary px-3 py-1 text-xs font-medium">
+      {doctor.specialty}
+    </span>
+  </div>
+</div>
 
           {state === "WAITING" && (
             <div className="medical-card flex flex-col items-center py-8 space-y-3">
               <Stethoscope className="w-10 h-10 text-muted-foreground" />
-              <p className="text-muted-foreground text-sm">Waiting for emergency alerts…</p>
+              <p className="text-muted-foreground text-sm">
+                {onCall ? "Waiting for emergency alerts…" : "Press on Call button to receive alerts..."}
+              </p>
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-success animate-blink" />
-                <span className="text-xs text-muted-foreground">Available</span>
+                <span className={`w-2 h-2 rounded-full ${onCall ? "bg-success" : "bg-destructive"
+                  } animate-blink`} />
+                <span className={`text-xs text-muted-foreground ${onCall ? "status-badge-active" : "status-badge bg-destructive/10 text-destructive"}`}>{onCall ? "Available" : "Unavailable"}</span>
               </div>
             </div>
           )}
