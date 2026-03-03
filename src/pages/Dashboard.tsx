@@ -138,12 +138,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-
-        {/* Floating location */}
-        <div className="fixed bottom-20 right-4 w-12 h-12 rounded-full gradient-primary flex items-center justify-center shadow-lg">
-          <MapPin className="w-5 h-5 text-primary-foreground" />
-        </div>
-
         <Profile
           isOpen={showProfile}
           onClose={() => setShowProfile(false)}
