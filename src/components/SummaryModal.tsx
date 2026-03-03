@@ -6,10 +6,11 @@ interface SummaryModalProps {
 
 const SummaryModal = ({ onClose }: SummaryModalProps) => {
     const summaryItems = [
-        "Collapsed, unresponsive",
+        "Teacher, collapsed, unresponsive",
+        "No pulse",
+        "Dyslipedimia",
         "CPR initiated",
-        "Dyslipidemia",
-        "Dispatch",
+        "Emergency risk level, critical",
     ];
 
     return (

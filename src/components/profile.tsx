@@ -1,15 +1,13 @@
 import { User, PenSquare, LogOut, Trash2, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 interface ProfileProps {
   isOpen: boolean;
   onClose: () => void;
+  onLogout: () => void;
   name: string;
 }
 
-const Profile = ({ isOpen, onClose, name }: ProfileProps) => {
-  const navigate = useNavigate();
-
+const Profile = ({ isOpen, onClose, onLogout, name }: ProfileProps) => {
   if (!isOpen) return null;
 
   return (
@@ -39,7 +37,7 @@ const Profile = ({ isOpen, onClose, name }: ProfileProps) => {
           </button>
 
           <button
-            onClick={() => navigate("/")}
+            onClick={onLogout}
             className="w-full p-4 rounded-xl bg-secondary text-foreground font-medium flex items-center gap-3"
           >
             <LogOut className="w-5 h-5" />

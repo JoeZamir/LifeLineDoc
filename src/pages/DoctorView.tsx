@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { mockDoctors, mockPatient } from "@/data/mockData";
 import { useEmergencySession } from "@/hooks/useEmergencySession";
+import { FileCheck } from "lucide-react";
 import {
   ArrowLeft,
   Phone,
@@ -32,7 +33,7 @@ const DoctorView = () => {
     // Simulate incoming alert when on call
     let t1: NodeJS.Timeout | null = null;
     if (onCall && state === "WAITING") {
-      t1 = setTimeout(() => setState("INCOMING"), 2000);
+      t1 = setTimeout(() => setState("INCOMING"), 3000);
     }
     return () => {
       if (t1) clearTimeout(t1);
@@ -183,13 +184,23 @@ const DoctorView = () => {
                   <h3 className="text-sm font-semibold text-foreground">Patient Details</h3>
                   <p className="text-xs text-muted-foreground">Blood: {patient.bloodType} | Allergies: {patient.allergies.join(", ")}</p>
                   <p className="text-xs text-muted-foreground">Location: {patient.location.label}</p>
-                  <p className="text-xs text-muted-foreground">Ambulance ETA: ~8 min</p>
+                  <p className="text-xs text-muted-foreground">Ambulance ETA: ~10 min</p>
                 </div>
 
                 {/* Status reporting */}
                 <div className="medical-card space-y-3">
+                  <div className="w-10 h-10 rounded-full bg-success/20 flex items-center justify-center">
+                      <FileCheck className="w-5 h-5 text-success"/>
+                  </div>
                   <h3 className="text-sm font-semibold text-foreground">Status Report</h3>
-                  {["Patient conscious", "Vitals stable", "Ambulance notified"].map((item, i) => (
+                  {[
+                    "Teacher, collapsed, unresponsive",
+                    "No pulse",
+                    "Dyslipedimia",
+                    "CPR initiated",
+                    "Emergency risk level,critical",
+                    "Ambulance notified"
+                  ].map((item, i) => (
                     <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
                       <CheckCircle2 className="w-4 h-4 text-success" />
                       <span>{item}</span>

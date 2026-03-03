@@ -10,7 +10,6 @@ import RoleSelect from "./pages/RoleSelect";
 import Dashboard from "./pages/Dashboard";
 import Emergency from "./pages/Emergency";
 import DoctorView from "./pages/DoctorView";
-import DrTranscript from "./pages/DrTranscript";
 import AmbulanceView from "./pages/AmbulanceView";
 import Notifications from "./pages/notifications";
 import DoctorsList from "./pages/DoctorsList";
@@ -40,7 +39,6 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/emergency" element={<Emergency />} />
                 <Route path="/doctor" element={<DoctorView />} />
-                <Route path="/doctor/transcript" element={<DrTranscript />} />
                 <Route path="/ambulance" element={<AmbulanceView />} />
                 <Route path="/doctors" element={<DoctorsList />} />
                 <Route path="/ambulances" element={<AmbulancesList />} />
