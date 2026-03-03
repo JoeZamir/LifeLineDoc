@@ -49,7 +49,7 @@ const VideoCallUI = ({
           // Connected state - tele-medicine interface
           <div className="w-full h-full relative">
             {/* Doctor info - Bottom Left */}
-            <div className="absolute bottom-3 left-0 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-lg z-50">
+            <div className="absolute bottom-3 left-0 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-lg z-10">
               <p className="text-white text-xs font-semibold leading-tight">
                 {doctor.name}
               </p>
