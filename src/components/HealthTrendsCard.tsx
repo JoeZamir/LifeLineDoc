@@ -10,12 +10,12 @@ interface TrendEntry {
 }
 
 const trendData: TrendEntry[] = [
-  { label: "Jan", weight: 78.4, bmi: 27.5 },
-  { label: "Feb", weight: 77.8, bmi: 27.2 },
-  { label: "Mar", weight: 77.3, bmi: 27.0 },
-  { label: "Apr", weight: 76.9, bmi: 26.7 },
-  { label: "May", weight: 76.2, bmi: 26.4 },
-  { label: "Jun", weight: 75.8, bmi: 26.1 },
+  { label: "Jan", weight: 68.4, bmi: 23.5 },
+  { label: "Feb", weight: 67.8, bmi: 23.2 },
+  { label: "Mar", weight: 67.3, bmi: 23.0 },
+  { label: "Apr", weight: 66.9, bmi: 22.7 },
+  { label: "May", weight: 66.2, bmi: 22.4 },
+  { label: "Jun", weight: 65.8, bmi: 22.1 },
 ];
 
 const HealthTrendsCard = () => {
