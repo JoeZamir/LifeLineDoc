@@ -10,8 +10,7 @@ import { useEmergencySession } from "@/hooks/useEmergencySession";
 import { StatusLogEntry } from "@/types/emergency";
 
 const statusReports = [
-  "transcribing call",
-  "ambulance on standby",
+  "transcribing call, ambulance on standby",
   "Teacher, collapsed, uresponsive",
   "No pulse",
   "ambulance dispatched",
