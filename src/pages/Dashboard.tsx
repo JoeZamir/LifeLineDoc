@@ -144,8 +144,7 @@ const Dashboard = () => {
   const DoctorHome = () => {
     const doctor = mockDoctors[0];
     const location = "Nairobi";
-    const [state, setState] = useState<"WAITING" | "INCOMING" | "ACCEPTED" | "IN_CALL">("WAITING");
-    const [timer, setTimer] = useState(0);
+    const [state, setState] = useState<"WAITING" | "INCOMING" | "ACCEPTED">("WAITING");
     const [showProfile, setShowProfile] = useState(false);
 
     useEffect(() => {
@@ -153,15 +152,6 @@ const Dashboard = () => {
       return () => clearTimeout(t1);
     }, []);
 
-    useEffect(() => {
-      if (state === "IN_CALL") {
-        const interval = setInterval(() => setTimer((t) => t + 1), 1000);
-        return () => clearInterval(interval);
-      }
-    }, [state]);
-
-    const formatTime = (s: number) =>
-      `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
     return (
       <div className="min-h-screen bg-background pb-24">
@@ -255,69 +245,20 @@ const Dashboard = () => {
             </div>
           )}
 
-          {(state === "ACCEPTED" || state === "IN_CALL") && (
+          {state === "ACCEPTED" && (
             <>
               <div className="medical-card bg-success/5 flex items-center gap-3 animate-slide-up">
                 <CheckCircle2 className="w-5 h-5 text-success" />
                 <span className="text-sm font-medium text-foreground">Emergency call accepted</span>
               </div>
 
-              {state === "ACCEPTED" && (
-                <button
-                  onClick={() => setState("IN_CALL")}
-                  className="w-full py-4 rounded-xl gradient-primary text-primary-foreground font-semibold flex items-center justify-center gap-2"
-                >
-                  <Video className="w-5 h-5" />
-                  Start Video Call
-                </button>
-              )}
-
-              {state === "IN_CALL" && (
-                <>
-                  {/* Simulated video */}
-                  <div className="medical-card p-0 overflow-hidden">
-                    <div className="bg-foreground/90 aspect-[4/3] flex items-center justify-center relative">
-                      <div className="text-center space-y-2">
-                        <div className="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center text-primary-foreground font-bold text-xl mx-auto">
-                          {mockPatient.name.split(" ").map(n => n[0]).join("")}
-                        </div>
-                        <p className="text-primary-foreground font-medium">{mockPatient.name}</p>
-                      </div>
-                      <div className="absolute top-3 right-3 bg-foreground/50 px-2 py-1 rounded-full flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-primary-foreground" />
-                        <span className="text-xs text-primary-foreground font-mono">{formatTime(timer)}</span>
-                      </div>
-                      <div className="absolute top-3 left-3 flex items-center gap-1 bg-foreground/50 rounded-full px-2 py-1">
-                        <span className="w-2 h-2 rounded-full bg-success animate-blink" />
-                        <span className="text-xs text-primary-foreground">Live</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Patient details */}
-                  <div className="medical-card space-y-2">
-                    <h3 className="text-sm font-semibold text-foreground">Patient Details</h3>
-                    <p className="text-xs text-muted-foreground">Blood: {mockPatient.bloodType} | Allergies: {mockPatient.allergies.join(", ")}</p>
-                    <p className="text-xs text-muted-foreground">Location: {mockPatient.location.label}</p>
-                    <p className="text-xs text-muted-foreground">Ambulance ETA: ~8 min</p>
-                  </div>
-
-                  {/* Status reporting */}
-                  <div className="medical-card space-y-3">
-                    <h3 className="text-sm font-semibold text-foreground">Status Report</h3>
-                    {[
-                      "Patient conscious",
-                      "Vitals stable",
-                      "Ambulance notified",
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle2 className="w-4 h-4 text-success" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
+              <button
+                onClick={() => navigate("/doctor/emergency-pov")}
+                className="w-full py-4 rounded-xl gradient-primary text-primary-foreground font-semibold flex items-center justify-center gap-2"
+              >
+                <Video className="w-5 h-5" />
+                Start Video Call
+              </button>
             </>
           )}
         </div>
