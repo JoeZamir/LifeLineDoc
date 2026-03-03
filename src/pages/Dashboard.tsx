@@ -89,7 +89,7 @@ const Dashboard = () => {
         {/* Medical Profile */}
         <div className="px-5 space-y-3">
           <h2 className="text-sm font-semibold text-foreground">Medical Profile</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             <div className="medical-card flex items-center gap-3">
               <Droplets className="w-5 h-5 text-emergency" />
               <div>
@@ -104,7 +104,7 @@ const Dashboard = () => {
                 <p className="font-semibold text-foreground text-sm">{patient.allergies.join(", ")}</p>
               </div>
             </div>
-            <div className="medical-card flex items-center gap-3 col-span-2">
+            <div className="medical-card flex items-center gap-3">
               <Cake className="w-5 h-5 text-primary" />
               <div>
                 <p className="text-xs text-muted-foreground">Age</p>
