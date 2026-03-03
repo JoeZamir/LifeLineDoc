@@ -9,7 +9,6 @@ import Signup from "./pages/Signup";
 import RoleSelect from "./pages/RoleSelect";
 import Dashboard from "./pages/Dashboard";
 import Emergency from "./pages/Emergency";
-import DoctorView from "./pages/DoctorView";
 import EmergencyDocPOV from "./pages/EmergencyDocPOV";
 import AmbulanceView from "./pages/AmbulanceView";
 import Notifications from "./pages/notifications";
@@ -39,7 +38,6 @@ const App = () => (
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/emergency" element={<Emergency />} />
-                <Route path="/doctor" element={<DoctorView />} />
                 <Route path="/doctor/emergency-pov" element={<EmergencyDocPOV />} />
                 <Route path="/ambulance" element={<AmbulanceView />} />
                 <Route path="/doctors" element={<DoctorsList />} />
