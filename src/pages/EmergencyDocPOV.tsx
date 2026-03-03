@@ -43,7 +43,7 @@ const EmergencyDocPOV = () => {
       licenseId: "",
       hospital: "Patient Stream",
       specialty: "Emergency",
-      rating: 5,
+      rating: 0,
       avatar: "",
       phone: patient.phone,
     }),
@@ -173,7 +173,7 @@ const EmergencyDocPOV = () => {
             />
           ) : (
             <div className="medical-card h-full flex items-center justify-center">
-              <p className="text-xs text-muted-foreground">Dispatching ambulance details...</p>
+              <p className="text-xs text-muted-foreground">Dispatching ambulance...</p>
             </div>
           )}
         </div>
