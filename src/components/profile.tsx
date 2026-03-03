@@ -38,7 +38,7 @@ const Profile = ({ isOpen, onClose, onLogout, name }: ProfileProps) => {
           </button>
 
           <button
-            onClick={() => navigate("/landing")}
+            onClick={() => navigate("/")}
             className="w-full p-4 rounded-xl bg-secondary text-foreground font-medium flex items-center gap-3"
           >
             <LogOut className="w-5 h-5" />
