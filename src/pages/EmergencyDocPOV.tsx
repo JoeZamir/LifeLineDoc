@@ -30,9 +30,7 @@ const EmergencyDocPOV = () => {
   const [showLogsModal, setShowLogsModal] = useState(false);
   const [showMapOverlay, setShowMapOverlay] = useState(false);
 
-  const showAmbulanceCard =
-    session.ambulance &&
-    ["AMBULANCE_ASSIGNED", "AMBULANCE_EN_ROUTE", "SUMMARY_SYNC", "COMPLETED"].includes(session.status);
+  const showAmbulanceCard = Boolean(session.ambulance);
 
   const isDispatching = ["DISPATCHING_AMBULANCE", "AMBULANCE_ASSIGNED", "AMBULANCE_EN_ROUTE"].includes(session.status);
 
@@ -164,7 +162,7 @@ const EmergencyDocPOV = () => {
           </div>
         </div>
 
-        <div className="flex-[5] px-3 py-2 overflow-hidden">
+        <div className="flex-[7] px-3 py-2 overflow-hidden">
           {showAmbulanceCard ? (
             <AmbulanceCard
               ambulance={session.ambulance!}
