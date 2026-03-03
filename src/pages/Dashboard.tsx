@@ -18,6 +18,7 @@ import {
   Navigation,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import Profile from "@/components/profile";
 
 // we will reuse some of the DoctorView/AmbulanceView logic later
 
@@ -34,6 +35,8 @@ const Dashboard = () => {
   // patient home (existing content)
   const PatientHome = () => {
     const patient = mockPatient;
+    const [showProfile, setShowProfile] = useState(false);
+
     return (
       <div className="min-h-screen bg-background pb-24">
         {/* Header */}
@@ -52,7 +55,11 @@ const Dashboard = () => {
                 <Bell className="w-5 h-5 text-foreground" />
                 <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emergency border-2 border-background" />
               </button>
-              <button className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
+              <button
+                onClick={() => setShowProfile(true)}
+                className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center"
+                aria-label="Open profile"
+              >
                 <User className="w-5 h-5 text-primary-foreground" />
               </button>
             </div>
@@ -124,6 +131,12 @@ const Dashboard = () => {
         <div className="fixed bottom-20 right-4 w-12 h-12 rounded-full gradient-primary flex items-center justify-center shadow-lg">
           <MapPin className="w-5 h-5 text-primary-foreground" />
         </div>
+
+        <Profile
+          isOpen={showProfile}
+          onClose={() => setShowProfile(false)}
+          name={patient.name}
+        />
       </div>
     );
   };
@@ -134,6 +147,7 @@ const Dashboard = () => {
     const location = "Nairobi";
     const [state, setState] = useState<"WAITING" | "INCOMING" | "ACCEPTED" | "IN_CALL">("WAITING");
     const [timer, setTimer] = useState(0);
+    const [showProfile, setShowProfile] = useState(false);
 
     useEffect(() => {
       const t1 = setTimeout(() => setState("INCOMING"), 2000);
@@ -168,7 +182,11 @@ const Dashboard = () => {
                 <Bell className="w-5 h-5 text-foreground" />
                 <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emergency border-2 border-background" />
               </button>
-              <button className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center">
+              <button
+                onClick={() => setShowProfile(true)}
+                className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center"
+                aria-label="Open profile"
+              >
                 <User className="w-5 h-5 text-primary-foreground" />
               </button>
             </div>
@@ -304,6 +322,12 @@ const Dashboard = () => {
             </>
           )}
         </div>
+
+        <Profile
+          isOpen={showProfile}
+          onClose={() => setShowProfile(false)}
+          name={doctor.name}
+        />
       </div>
     );
   };
