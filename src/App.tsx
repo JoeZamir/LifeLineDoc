@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import BottomNav from "./components/BottomNav";
 import { AuthProvider } from "./context/AuthContext";
 import { EmergencyProvider } from "./hooks/useEmergencySession.tsx";
+import PwaInstallManager from "./components/PwaInstallManager";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
               <BottomNav />
+              <PwaInstallManager />
             </div>
           </BrowserRouter>
         </EmergencyProvider>
