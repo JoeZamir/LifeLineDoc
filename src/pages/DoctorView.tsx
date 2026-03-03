@@ -11,6 +11,7 @@ import {
   Stethoscope,
   Video,
   User,
+  Cake,
   Power,
 } from "lucide-react";
 
@@ -102,6 +103,10 @@ const DoctorView = () => {
               <div className="flex items-center gap-2 text-sm text-foreground">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span>{patient.name}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <Cake className="w-4 h-4 text-muted-foreground" />
+                <span>{patient.age} years</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
                 <MapPin className="w-4 h-4 text-muted-foreground" />

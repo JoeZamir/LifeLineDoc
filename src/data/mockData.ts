@@ -28,6 +28,7 @@ export const mockAmbulances: Ambulance[] = [
 export const mockPatient: Patient = {
   id: "pat-001",
   name: "Pascal",
+  age: 34,
   phone: "+254 700 123 456",
   bloodType: "O+",
   allergies: ["Penicillin"],

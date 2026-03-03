@@ -63,6 +63,7 @@ export type EmergencyState =
 export interface Patient {
   id: string;
   name: string;
+  age: number;
   phone: string;
   bloodType: string;
   allergies: string[];
