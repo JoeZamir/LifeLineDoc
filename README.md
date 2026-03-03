@@ -1,162 +1,147 @@
 # LifelineDoc App
 
-**Emergency Help in Seconds** - A medical emergency coordination demo application for filming purposes.
+**Emergency Help in Seconds** - A medical emergency coordination demo app for filming and prototype walkthroughs.
 
 ## Overview
 
-LifelineDoc is a frontend-only demo SPA that simulates a real-time medical emergency coordination system. This app is designed for filming purposes and contains no backend - all functionality is simulated using JavaScript.
+LifelineDoc is a **frontend-only** SPA that simulates medical emergency coordination in real time. There is no backend; all flows use local state and mock data to support demo and filming scenarios.
 
-## Features
+## Core User Flow
 
-### Patient View
+### 1) Entry & Authentication
 
-- **SOS Emergency Button** - Hold to activate emergency services
-- **Medical Profile** - Blood type, allergies, conditions, medications
-- **Emergency Contacts** - Quick-dial emergency contacts
-- **Live Location Tracking** - Simulated GPS coordinates
+1. User opens `/` (landing + splash).
+2. User either:
+   - signs in via `/login` (role selected in the login form), or
+   - selects role via `/select-role` and creates account on `/signup`.
+3. App stores selected role (`patient`, `doctor`, or `ambulance`) in auth context and redirects to `/dashboard`.
 
-### Emergency Flow (State Machine)
+### 2) Role-Based Dashboard Experience
 
-1. **INITIATED** - Sending GPS coordinates
-2. **SEARCHING_DOCTOR** - Finding nearest available doctor
-3. **DOCTOR_FOUND** - Doctor profile displayed
-4. **CONNECTING_VIDEO** - Establishing secure video call
-5. **VIDEO_CONNECTED** - Live video consultation
-6. **DISPATCHING_AMBULANCE** - Notifying nearest ambulance
-7. **AMBULANCE_ASSIGNED** - Ambulance details displayed
-8. **AMBULANCE_EN_ROUTE** - Live tracking with ETA countdown
-9. **SUMMARY_SYNC** - Emergency summary sent to dispatch
+- **Patient** dashboard: SOS button, profile snapshot, emergency contacts, quick access to doctors/ambulances/health.
+- **Doctor** dashboard: incoming emergency simulation and quick action to open doctor emergency POV.
+- **Ambulance** dashboard: dispatch-oriented overview and quick action into ambulance view.
 
-### Doctor View
+### 3) Emergency Session Flow (Simulated)
 
-- Incoming emergency notifications
-- Patient medical information display
-- Simulated video call interface
-- Ambulance status tracking
+When a patient starts SOS, the emergency session advances through mock states:
 
-### Ambulance Dashboard
+1. `INITIATED`
+2. `SEARCHING_DOCTOR`
+3. `DOCTOR_FOUND`
+4. `CONNECTING_VIDEO`
+5. `VIDEO_CONNECTED`
+6. `DISPATCHING_AMBULANCE`
+7. `AMBULANCE_ASSIGNED`
+8. `AMBULANCE_EN_ROUTE`
+9. `SUMMARY_SYNC`
 
-- Emergency dispatch notifications
-- Patient location and details
-- Live route progress simulation
-- Arrival confirmation workflow
+Supporting pages:
+- `/emergency` - patient emergency timeline/session view
+- `/doctor/emergency-pov` - doctor perspective
+- `/ambulance` - ambulance perspective
+
+## Routes
+
+| Route | Description |
+| --- | --- |
+| `/` | Landing page |
+| `/login` | Sign in (role required) |
+| `/select-role` | Role selection before signup |
+| `/signup` | Account creation using selected role |
+| `/dashboard` | Role-aware home dashboard |
+| `/emergency` | Active emergency session (patient) |
+| `/doctor/emergency-pov` | Emergency handling (doctor) |
+| `/ambulance` | Active dispatch view (ambulance) |
+| `/doctors` | Registered doctors list |
+| `/ambulances` | Available ambulances list |
+| `/health` | Patient health & wellness dashboard |
+| `/notifications` | Notifications center |
+
+## Updated Project Structure
+
+```text
+.
+├── public/
+│   ├── assets/                  # App logos and static visual assets
+│   ├── manifest.json            # PWA manifest
+│   └── sw.js                    # Service worker
+├── src/
+│   ├── components/
+│   │   ├── ui/                  # shadcn/ui primitives
+│   │   ├── BottomNav.tsx
+│   │   ├── PwaInstallManager.tsx
+│   │   ├── VideoCallUI.tsx
+│   │   ├── StatusLog.tsx
+│   │   ├── DoctorCard.tsx
+│   │   ├── AmbulanceCard.tsx
+│   │   └── ...
+│   ├── context/
+│   │   └── AuthContext.tsx      # Current role/auth state
+│   ├── data/
+│   │   └── mockData.ts          # Mock users, doctors, ambulances, patient data
+│   ├── hooks/
+│   │   ├── useEmergencySession.tsx
+│   │   └── ...
+│   ├── pages/
+│   │   ├── Landing.tsx
+│   │   ├── Login.tsx
+│   │   ├── RoleSelect.tsx
+│   │   ├── Signup.tsx
+│   │   ├── Dashboard.tsx
+│   │   ├── Emergency.tsx
+│   │   ├── EmergencyDocPOV.tsx
+│   │   ├── AmbulanceView.tsx
+│   │   ├── DoctorsList.tsx
+│   │   ├── AmbulancesList.tsx
+│   │   ├── Health.tsx
+│   │   └── notifications.tsx
+│   ├── services/
+│   │   └── mockEmergencyService.ts
+│   ├── types/
+│   │   └── emergency.ts
+│   ├── App.tsx
+│   └── main.tsx
+├── index.html
+├── vite.config.ts
+└── package.json
+```
 
 ## Tech Stack
 
-- **React 18** - Functional components with hooks
-- **JavaScript** - No TypeScript
-- **Tailwind CSS** - Utility-first styling
-- **React Router 6** - Client-side routing
-- **Vite** - Build tool and dev server
-- **PWA** - Installable web app
+- **React 18 + TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **shadcn/ui** components
+- **React Router 6**
+- **TanStack Query**
+- **PWA support**
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
+- npm
 
-### Installation
+### Run locally
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
+```
 
-# Build for production
+### Build & preview
+
+```bash
 npm run build
-
-# Preview production build
 npm run preview
 ```
 
-### Development Server
+## Demo Notes
 
-The app runs on `http://localhost:3000` by default.
+- Authentication is simulated (no real backend).
+- Emergency progression is mocked for demo predictability.
+- Video, maps, and dispatch integrations are visual simulations.
 
-## Project Structure
-
-```
-src/
-├── components/          # Reusable UI components
-│   ├── SOSButton.jsx
-│   ├── DoctorCard.jsx
-│   ├── AmbulanceCard.jsx
-│   ├── VideoCallUI.jsx
-│   ├── StatusLog.jsx
-│   ├── MapSimulation.jsx
-│   └── ...
-├── pages/               # Route pages
-│   ├── Landing.jsx
-│   ├── Login.jsx
-│   ├── Signup.jsx
-│   ├── RoleSelect.jsx (new pre‑signup step to pick patient/doctor/ambulance)
-│   ├── Dashboard.jsx
-│   ├── Emergency.jsx
-│   ├── Doctor.jsx
-│   └── Ambulance.jsx
-├── hooks/               # Custom React hooks
-│   ├── useAuth.js
-│   └── useEmergency.js
-├── services/            # Mock API services
-│   └── mockEmergencyService.js
-├── data/                # Mock data
-│   └── mockData.js
-├── App.jsx              # Main app with routing
-├── main.jsx             # Entry point
-└── index.css            # Tailwind styles
-```
-
-## Routes
-
-| Route          | Description                                         |
-| -------------- | --------------------------------------------------- |
-| `/`            | Landing page                                        |
-| `/login`       | Sign in (patient/doctor/ambulance)                  |
-| `/select-role` | Choose patient/doctor/ambulance (before signup)     |
-| `/signup`      | Create account (role carried from previous step)    |
-| `/doctors`     | List of registered doctors (patient/ambulance view) |
-| `/ambulances`  | List of available ambulances                        |
-| `/health`      | Health & wellness dashboard (patient only)          |
-| `/dashboard`   | Patient dashboard with SOS                          |
-| `/emergency`   | Active emergency session                            |
-| `/doctor`      | Doctor portal                                       |
-| `/ambulance`   | Ambulance dashboard                                 |
-
-## Demo Credentials
-
-This app uses simulated authentication. Enter any phone/password to log in.
-
-**Select role on login or signup:**
-
-- **Patient** - Home dashboard with personal profile; bottom nav contains doctors, ambulances and health
-- **Doctor** - Doctor dashboard (emergency alerts) with bottom nav for home and ambulances
-- **Ambulance** - Ambulance dashboard with bottom nav for home and doctors
-
-A role must be chosen before accessing the dashboard; it influences which sections are shown.
-
-## Design Principles
-
-- **Medical-grade UI** - Calm blues, emergency red, confirmation green
-- **Mobile-first** - Designed for phone screens
-- **Large tap targets** - Easy interaction during emergencies
-- **Clear typography** - Information hierarchy
-- **Minimal clutter** - Focus on critical information
-
-## Important Notes
-
-⚠️ **This is a DEMO application for FILMING PURPOSES ONLY**
-
-- No real backend or API calls
-- No real video streaming
-- No real map integration
-- No real GPS tracking
-- All data is simulated
-- Do not use for actual emergencies
-
-## License
-
-Demo application - For filming purposes only.
+⚠️ **For filming/demo use only — not for real emergency response.**
