@@ -15,6 +15,7 @@ import {
   Video,
   Clock,
   Navigation,
+  Cake,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import Profile from "@/components/profile";
@@ -101,6 +102,13 @@ const Dashboard = () => {
               <div>
                 <p className="text-xs text-muted-foreground">Allergies</p>
                 <p className="font-semibold text-foreground text-sm">{patient.allergies.join(", ")}</p>
+              </div>
+            </div>
+            <div className="medical-card flex items-center gap-3 col-span-2">
+              <Cake className="w-5 h-5 text-primary" />
+              <div>
+                <p className="text-xs text-muted-foreground">Age</p>
+                <p className="font-semibold text-foreground">{patient.age} years</p>
               </div>
             </div>
           </div>
@@ -227,6 +235,10 @@ const Dashboard = () => {
                   <span>{mockPatient.name}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-foreground">
+                  <Cake className="w-4 h-4 text-muted-foreground" />
+                  <span>{mockPatient.age} years</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                   <span>{mockPatient.location.label}, {mockPatient.location.county}</span>
                 </div>
@@ -343,6 +355,10 @@ const Dashboard = () => {
                 <div className="flex items-center gap-2 text-sm text-foreground">
                   <User className="w-4 h-4 text-muted-foreground" />
                   <span>{mockPatient.name}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-foreground">
+                  <Cake className="w-4 h-4 text-muted-foreground" />
+                  <span>{mockPatient.age} years</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-foreground">
                   <MapPin className="w-4 h-4 text-muted-foreground" />

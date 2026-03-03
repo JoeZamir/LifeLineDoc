@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, FileCheck, History } from "lucide-react";
+import { ArrowLeft, Cake, FileCheck, History } from "lucide-react";
 import { mockAmbulances, mockPatient } from "@/data/mockData";
 import VideoCallUI from "@/components/VideoCallUI";
 import AmbulanceCard from "@/components/AmbulanceCard";
@@ -146,6 +146,7 @@ const EmergencyDocPOV = () => {
             <h3 className="text-sm font-semibold text-foreground mb-2">Patient Details</h3>
             <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
               <p className="text-xs text-muted-foreground truncate">Phone: <span className="text-foreground">{patient.phone}</span></p>
+              <p className="text-xs text-muted-foreground truncate flex items-center gap-1"><Cake className="w-3 h-3" />Age: <span className="text-foreground">{patient.age} years</span></p>
               <p className="text-xs text-muted-foreground truncate">Blood Type: <span className="text-foreground">{patient.bloodType}</span></p>
               <p className="text-xs text-muted-foreground truncate col-span-2">Allergies: <span className="text-foreground">{patient.allergies.join(", ")}</span></p>
               <p className="text-xs text-muted-foreground truncate">County: <span className="text-foreground">{patient.county}</span></p>

@@ -6,6 +6,7 @@ import {
   Truck,
   MapPin,
   User,
+  Cake,
   CheckCircle2,
   Navigation,
   Clock,
@@ -87,6 +88,10 @@ const AmbulanceView = () => {
               <div className="flex items-center gap-2 text-sm text-foreground">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span>{mockPatient.name}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <Cake className="w-4 h-4 text-muted-foreground" />
+                <span>{mockPatient.age} years</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
