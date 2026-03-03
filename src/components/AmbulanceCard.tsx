@@ -1,5 +1,5 @@
 import { Ambulance as AmbulanceType } from "@/types/emergency";
-import { Truck, User, Clock, MapPin, Bell } from "lucide-react";
+import { Truck, User, Clock, MapPin, Map } from "lucide-react";
 
 interface AmbulanceCardProps {
   ambulance: AmbulanceType;
@@ -48,13 +48,13 @@ const AmbulanceCard = ({
           {onMapClick && (
             <button
               onClick={onMapClick}
-              className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${isDispatching
+              className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${isDispatching
                 ? "bg-emergency/20 text-emergency animate-blink"
-                : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                : "bg-secondary text-emergency hover:bg-secondary/80"
                 }`}
               aria-label="View map"
             >
-              <MapPin className="w-3 h-3" />
+              <Map className="w-3.5 h-3.5" strokeWidth={2.25} />
             </button>
           )}
         </div>
