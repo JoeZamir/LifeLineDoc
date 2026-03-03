@@ -1,0 +1,153 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { mockDoctors, mockPatient } from "@/data/mockData";
+import { useEmergencySession } from "@/hooks/useEmergencySession";
+import {
+  ArrowLeft,
+  Phone,
+  MapPin,
+  CheckCircle2,
+  AlertCircle,
+  Stethoscope,
+  Video,
+  User,
+  Cake,
+  Power,
+} from "lucide-react";
+
+type DoctorViewState = "WAITING" | "INCOMING" | "ACCEPTED";
+
+const DoctorView = () => {
+  const navigate = useNavigate();
+  const doctor = mockDoctors[0];
+  const patient = mockPatient;
+  const [state, setState] = useState<DoctorViewState>("WAITING");
+  const [onCall, setOnCall] = useState(true);
+
+  const { setVideoConnected } = useEmergencySession();
+
+
+  useEffect(() => {
+    // Simulate incoming alert when on call
+    let t1: NodeJS.Timeout | null = null;
+    if (onCall && state === "WAITING") {
+      t1 = setTimeout(() => setState("INCOMING"), 3000);
+    }
+    return () => {
+      if (t1) clearTimeout(t1);
+    };
+  }, [onCall, state]);
+  // reset shared video connection state while in dashboard flow
+  useEffect(() => {
+    setVideoConnected(false);
+  }, [state, setVideoConnected]);
+
+  return (
+    <div className="min-h-screen bg-background pb-24">
+      <header className="px-5 pt-6 pb-4 flex items-center justify-between">
+        <button onClick={() => navigate("/dashboard")} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+          <ArrowLeft className="w-5 h-5 text-foreground" />
+        </button>
+        <div className="flex-1">
+          <h1 className="font-display font-bold text-foreground">Doctor Dashboard</h1>
+          <p className="text-xs text-muted-foreground">{doctor.name}</p>
+        </div>
+        <div className="flex items-center gap-3 flex-none">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-foreground">On Call</span>
+            <button
+              onClick={() => {
+                setOnCall((v) => {
+                  if (v) {
+                    // turning off resets any pending or active session
+                    setState("WAITING");
+                    setVideoConnected(false);
+                  }
+                  return !v;
+                });
+              }}
+              className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+              aria-label="Toggle on call status"
+            >
+              <Power className={`w-5 h-5 ${onCall ? "text-success" : "text-destructive"}`} />
+            </button>
+          </div>
+          <span className={onCall ? "status-badge-active" : "status-badge bg-destructive/10 text-destructive"}>
+            <span className={`w-1.5 h-1.5 rounded-full ${onCall ? "bg-medical-green" : "bg-destructive"} animate-blink`} />
+            {onCall ? "Online" : "Offline"}
+          </span>
+        </div>
+      </header>
+
+      <div className="px-5 space-y-4">
+
+        {state === "WAITING" && (
+          <div className="medical-card flex flex-col items-center py-8 space-y-3">
+            <Stethoscope className="w-10 h-10 text-muted-foreground" />
+            <p className="text-muted-foreground text-sm">Waiting for emergency alerts…</p>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-success animate-blink" />
+              <span className="text-xs text-muted-foreground">Available</span>
+            </div>
+          </div>
+        )}
+
+        {state === "INCOMING" && (
+          <div className="medical-card border-emergency/30 bg-emergency/5 space-y-4 animate-slide-up">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-emergency animate-blink" />
+              <span className="font-semibold text-emergency text-sm">INCOMING EMERGENCY</span>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <User className="w-4 h-4 text-muted-foreground" />
+                <span>{patient.name}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <Cake className="w-4 h-4 text-muted-foreground" />
+                <span>{patient.age} years</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <MapPin className="w-4 h-4 text-muted-foreground" />
+                <span>{patient.location.label}, {patient.location.county}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-foreground">
+                <Phone className="w-4 h-4 text-muted-foreground" />
+                <span>{patient.phone}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setState("ACCEPTED")}
+              className="w-full py-3.5 rounded-xl bg-success text-success-foreground font-semibold text-sm"
+            >
+              Accept Emergency Call
+            </button>
+          </div>
+        )}
+
+        {state === "ACCEPTED" && (
+          <>
+            <div className="medical-card bg-success/5 flex items-center gap-3 animate-slide-up">
+              <CheckCircle2 className="w-5 h-5 text-success" />
+              <span className="text-sm font-medium text-foreground">Emergency call accepted</span>
+            </div>
+
+            <button
+              onClick={() => navigate("/doctor/emergency-pov")}
+              className="w-full py-4 rounded-xl gradient-primary text-primary-foreground font-semibold flex items-center justify-center gap-2"
+            >
+              <Video className="w-5 h-5" />
+              Start Video Call
+            </button>
+          </>
+        )}
+      </div>
+
+
+    </div>
+  );
+};
+
+export default DoctorView;
