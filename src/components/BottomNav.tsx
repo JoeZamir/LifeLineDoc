@@ -22,7 +22,7 @@ const BottomNav = () => {
             // start 30s delay to show indicator
             tid = setTimeout(() => {
                 setShowDispatchIcon(true);
-            }, 30000);
+            }, 40000);
         } else {
             setShowDispatchIcon(false);
         }
