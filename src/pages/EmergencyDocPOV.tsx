@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Cake, FileCheck, History } from "lucide-react";
-import { mockAmbulances, mockPatient } from "@/data/mockData";
+import { mockPatient } from "@/data/mockData";
 import VideoCallUI from "@/components/VideoCallUI";
 import AmbulanceCard from "@/components/AmbulanceCard";
 import LogsModal from "@/components/LogsModal";
+import MapOverlay from "@/components/MapOverlay";
 import { useEmergencySession } from "@/hooks/useEmergencySession";
 import { StatusLogEntry } from "@/types/emergency";
 
@@ -23,13 +24,18 @@ const statusReports = [
 const EmergencyDocPOV = () => {
   const navigate = useNavigate();
   const patient = mockPatient;
-  const ambulance = mockAmbulances[0];
-  const { setVideoConnected } = useEmergencySession();
+  const { session, startEmergency, cancelEmergency, setVideoConnected } = useEmergencySession();
 
   const [connectionState, setConnectionState] = useState<"connecting" | "connected">("connecting");
   const [currentStatusIndex, setCurrentStatusIndex] = useState<number>(-1);
-  const [showAmbulanceCard, setShowAmbulanceCard] = useState(false);
   const [showLogsModal, setShowLogsModal] = useState(false);
+  const [showMapOverlay, setShowMapOverlay] = useState(false);
+
+  const showAmbulanceCard =
+    session.ambulance &&
+    ["AMBULANCE_ASSIGNED", "AMBULANCE_EN_ROUTE", "SUMMARY_SYNC", "COMPLETED"].includes(session.status);
+
+  const isDispatching = ["DISPATCHING_AMBULANCE", "AMBULANCE_ASSIGNED", "AMBULANCE_EN_ROUTE"].includes(session.status);
 
   const patientAsVideoParticipant = useMemo(
     () => ({
@@ -57,6 +63,14 @@ const EmergencyDocPOV = () => {
       timestamp: new Date(),
       type: message.includes("critical") || message.includes("No pulse") ? "critical" : "info",
     }));
+
+  useEffect(() => {
+    startEmergency();
+
+    return () => {
+      cancelEmergency();
+    };
+  }, [startEmergency, cancelEmergency]);
 
   useEffect(() => {
     const connectTimeout = setTimeout(() => {
@@ -87,13 +101,8 @@ const EmergencyDocPOV = () => {
       });
     }, 5000);
 
-    const ambulanceTimeout = setTimeout(() => {
-      setShowAmbulanceCard(true);
-    }, 20000);
-
     return () => {
       clearInterval(interval);
-      clearTimeout(ambulanceTimeout);
     };
   }, [connectionState]);
 
@@ -158,7 +167,11 @@ const EmergencyDocPOV = () => {
 
         <div className="flex-[5] px-3 py-2 overflow-hidden">
           {showAmbulanceCard ? (
-            <AmbulanceCard ambulance={ambulance} isDispatching />
+            <AmbulanceCard
+              ambulance={session.ambulance!}
+              isDispatching={isDispatching}
+              onMapClick={() => setShowMapOverlay(true)}
+            />
           ) : (
             <div className="medical-card h-full flex items-center justify-center">
               <p className="text-xs text-muted-foreground">Dispatching ambulance details...</p>
@@ -171,6 +184,15 @@ const EmergencyDocPOV = () => {
         <LogsModal
           logs={logs}
           onClose={() => setShowLogsModal(false)}
+        />
+      )}
+
+      {showMapOverlay && session.ambulance && (
+        <MapOverlay
+          patientLocation={mockPatient.location}
+          ambulanceLocation={session.ambulance.location}
+          ambulanceEta={session.ambulance.eta}
+          onClose={() => setShowMapOverlay(false)}
         />
       )}
     </div>
