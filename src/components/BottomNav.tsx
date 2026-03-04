@@ -32,7 +32,7 @@ const BottomNav = () => {
     }, [session.videoConnected]);
 
     // hide navigation on non-auth pages (do not return early until after hooks are declared)
-    const hidePaths = ["/", "/login", "/signup", "/select-role"]; // extend if needed
+    const hidePaths = ["/", "/login", "/signup", "/select-role", "/admin"]; // extend if needed
     const hideNav = hidePaths.includes(location.pathname);
 
     const isActive = (path: string) => location.pathname === path;
