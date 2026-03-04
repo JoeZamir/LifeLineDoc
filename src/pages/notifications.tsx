@@ -9,11 +9,11 @@ type NotificationItem = {
 
 const notifications: NotificationItem[] = [
   { id: 1, message: "Dr Martha joined!", timestamp: "Yesterday, 9:00 PM" },
-  { id: 2, message: "Dr. Eliud left.", timestamp: "Yesterday, 8:30 PM" },
-  { id: 3, message: "Dr. Thomas left.", timestamp: "Yesterday, 8:10 PM" },
+  { id: 2, message: "Dr. Eliud left.", timestamp: "Yesterday, 6:30 PM" },
   { id: 4, message: "Dr. Eliud joined!", timestamp: "Yesterday, 7:55 PM" },
-  { id: 5, message: "Dr. Thomas joined!", timestamp: "Yesterday, 7:20 PM" },
-  { id: 6, message: "Thank you for signing up", timestamp: "Yesterday, 6:45 PM" },
+  { id: 3, message: "Dr. Thomas left.", timestamp: "Yesterday, 4:35 PM" },
+  { id: 5, message: "Dr. Thomas joined!", timestamp: "Yesterday, 4:20 PM" },
+  { id: 6, message: "Thank you for signing up", timestamp: "Yesterday, 3:45 PM" },
 ];
 
 const Notifications = () => {

@@ -52,7 +52,7 @@ const PwaInstallManager = () => {
   }
 
   return (
-    <div className="fixed bottom-20 right-4 z-50 flex flex-col gap-2 sm:bottom-6">
+    <div className="fixed top-10 right-4 z-50 flex flex-col gap-2 sm:bottom-6">
       {isInstallPromptVisible ? (
         <Button onClick={installApp} size="sm" className="shadow-lg">
           Install app
