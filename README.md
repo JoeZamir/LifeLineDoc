@@ -2,6 +2,14 @@
 
 URL: https://lifelinedoc.netlify.app
 
+<div id="app-screenshots" style="display: flex; flex-direction: row;justify-content: center; align-items: center; gap: 10px;">
+   <img width="589" height="879" alt="Screenshot 2026-03-04 185823" src="https://github.com/user-attachments/assets/54624f95-fa96-4669-9edc-00f5ab69a7db" />
+   <img width="632" height="868" alt="Screenshot 2026-03-04 185848" src="https://github.com/user-attachments/assets/1fac814d-ac42-424d-9d93-374351dda095" />
+   <img width="635" height="869" alt="Screenshot 2026-03-04 185650" src="https://github.com/user-attachments/assets/ba3827ad-9cad-4ccd-b53a-4e5356c7acd5" />
+   <img width="637" height="870" alt="Screenshot 2026-03-04 185757" src="https://github.com/user-attachments/assets/b1cb3e49-0b61-4624-a271-c87e0d8109a0" />
+</div>
+
+
 **Emergency Help in Seconds** - A medical emergency coordination demo app for filming and prototype walkthroughs.
 
 ## Overview
