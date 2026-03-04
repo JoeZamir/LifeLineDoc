@@ -23,7 +23,7 @@ import {
   Building2
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import Profile from "@/components/profile";
+import Profile from "@/components/Profile";
 
 // we will reuse some of the DoctorView/AmbulanceView logic later
 
